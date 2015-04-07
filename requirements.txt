@@ -1,0 +1,14 @@
+Django==1.5.8
+MySQL-python
+gunicorn
+qrcode
+celery==3.0.23
+django-celery==3.0.23
+fabric
+django-extensions
+pygraphviz
+dateutils
+django-smtp-ssl
+django_teamcity
+redis
+django-getenv
