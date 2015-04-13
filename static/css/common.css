@@ -1,0 +1,123 @@
+body { font-family: Arial,Helvetica,"微软雅黑","宋体",sans-serif; }
+
+input.uppercase {
+    text-transform:uppercase;
+}
+
+/* For Required fields - puts a yellow background color on inputs */
+input.highlight, select.highlight, textarea.highlight {
+    background-color: #FFC;
+}
+.search_result_list thead th {
+    text-align: center;
+}
+.search_result_list .cell_center {
+    text-align: center;
+}
+.search_result_list .cell_right {
+    text-align: right;
+}
+.search_result_list .check_column {
+    width: 20px;
+}
+.error_message {
+    color: #b94a48;
+}
+.page-header-p{
+    margin:10px 0 20px;
+}
+.align_right {
+    text-align: right;
+}
+.align_center {
+    text-align: center;
+}
+input.currency {
+    width: 150px;
+}
+/*定义成well的区段，使用这个css让内部控件靠左显示*/
+.fly_left_well {
+    width: 480px;
+}
+.fly_left_well .control-group {
+    margin-left: -80px;
+}
+/*页脚专用样式*/
+#page_footer {
+    padding: 0;
+}
+#page_footer a {
+    color: #333333;
+    background-color: #ffffff;
+    text-decoration: none;
+}
+#page_footer a:hover{
+    color: #0088cc;
+    text-decoration: none;
+}
+/*Ajax加载专用Logo的样式*/
+#ajax_logo {
+    display: none;
+    z-index: 1031;
+    position: fixed;
+    top: 50px;
+    right: 60px;
+    float: right;
+    padding: 2px 8px;
+}
+#ajax_logo img {
+    width: 40px;
+    height: 40px;
+}
+/*版本号显示样式*/
+.version_no {
+    font-size: 0.9em;
+    color:#696969;
+}
+.page_header {
+    margin: 0 0 10px;
+    padding: 0;
+    width: 100%;
+    height: 36px;
+}
+/*搜索框样式*/
+.page_header .search_box {
+    margin-top: -42px;
+    margin-right: 10px;
+    float:right;
+}
+.page_header .bc {
+    padding: 8px 2px;
+    margin: 0 0 10px;
+    list-style: none;
+}
+.page_header .bc li {
+    display: inline-block;
+    *display: inline;
+    /* IE7 inline-block hack */
+    *zoom: 1;
+    text-shadow: 0 1px 0 #ffffff;
+}
+.page_header .bc .divider {
+    padding: 0 5px;
+    color: #ccc;
+}
+.page_header .bc .active {
+    color: #999999;
+}
+/*限制输入框只能输入数字*/
+.numberic_only {
+    ime_mode:disabled !important;
+}
+/** 搜索用开始结束时间输入框*/
+.datetime_searchgroup div {
+    display: inline;
+}
+
+.btn-group button {
+    min-height: 30px;
+}
+.btn-group ul {
+    min-height: 20px;
+    min-width: 190px;
+}
