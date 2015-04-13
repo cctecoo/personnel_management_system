@@ -17,7 +17,7 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 
-    # 首页
+    # 首页test
     url(r'^$', 'personnel_management_system.views.first_page'),
 
     # 账户管理模块
