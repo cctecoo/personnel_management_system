@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head lang="en">
+    {% load staticfiles %}
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
+    <link rel="shortcut icon" type="image/x-icon" href="{% static "favicon.ico" %}">
 </head>
 <body>
-    <h1>My helpful timestamp site</h1>
+    <h1>人事管理系统</h1>
     {% block content %}{% endblock %}
     {% block footer %}
     <hr>

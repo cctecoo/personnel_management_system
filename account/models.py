@@ -101,10 +101,11 @@ class User(PermissionsMixin):
         return role in ROLES and self.groups.filter(name=ROLES[role]).exists()
 
     class Meta:
-        permissions = (
-            ("view_user", u"能否查看用户"),
-        )
+        # permissions = (
+        #     ("view_user", u"能否查看用户"),
+        # )
         db_table = "hr_manage_account"
+        # app_label = 'account'
 
     def __unicode__(self):
         return self.username

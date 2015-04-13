@@ -133,6 +133,9 @@ INSTALLED_APPS = (
     'account',
 )
 
+# 自定义User Model
+AUTH_USER_MODEL = 'account.User'
+
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 
 # A sample logging configuration. The only tangible logging
@@ -168,3 +171,5 @@ LOGIN_URL = '/account/login/'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 DATE_INPUT_FORMATS = ('%Y/%m/%d',)
 DATE_FORMAT = 'Y/m/d'
+DATETIME_INPUT_FORMATS = ('%Y-%m-%d %H:%M',)
+DATETIME_FORMAT = 'Y-m-d hh:mm'
