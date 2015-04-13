@@ -111,6 +111,36 @@ class User(PermissionsMixin):
         return self.username
 
 
+class UserForm(ModelForm):
+    role = forms.IntegerField()
+    cinema = forms.CharField(required=False)
+
+    class Meta:
+        model = User
+        fields = ('username', 'password', 'full_name')
+
+    def clean(self):
+        cleaned_data = super(UserForm, self).clean()
+        # 添加模式下检查用户名是否唯一
+        if 'username' in cleaned_data and 'mode' in cleaned_data:
+            username = cleaned_data['username']
+            if User.objects.filter(username=username).count() > 0:
+                msg = u"用户名已存在。"
+                self._errors["username"] = self.error_class([msg])
+
+                del cleaned_data["username"]
+
+        return cleaned_data
+
+
+class UserEditForm(UserForm):
+    city_id = forms.IntegerField()
+
+    class Meta:
+        model = User
+        fields = ('username', 'full_name')
+
+
 class UserLoginForm(Form):
     username = forms.CharField(required=True, max_length=30)
     password = forms.CharField(required=True, max_length=20)
