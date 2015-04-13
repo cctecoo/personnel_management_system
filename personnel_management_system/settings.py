@@ -1,4 +1,10 @@
-# Django settings for personnel_management_system project.
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#  Django settings for personnel_management_system project.
+import os
+import os.path
+
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -29,11 +35,11 @@ ALLOWED_HOSTS = []
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
 # In a Windows environment this must be set to your system time zone.
-TIME_ZONE = 'America/Chicago'
+TIME_ZONE = 'Asia/Shanghai'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'zh-CN'
 
 SITE_ID = 1
 
@@ -72,6 +78,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    os.path.join(BASE_DIR, "static"),
 )
 
 # List of finder classes that know how to find static files in
@@ -107,8 +114,10 @@ ROOT_URLCONF = 'personnel_management_system.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'personnel_management_system.wsgi.application'
 
-import os
-TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\','/'),)
+TEMPLATE_DIRS = (
+    os.path.join(BASE_DIR,  'templates'),
+    os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'),
+)
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -120,9 +129,12 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
+    'django.contrib.admindocs',
     'account',
 )
+
+# 自定义User Model
+AUTH_USER_MODEL = 'account.User'
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 
@@ -154,3 +166,10 @@ LOGGING = {
         },
     }
 }
+
+LOGIN_URL = '/account/login/'
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+DATE_INPUT_FORMATS = ('%Y/%m/%d',)
+DATE_FORMAT = 'Y/m/d'
+DATETIME_INPUT_FORMATS = ('%Y-%m-%d %H:%M',)
+DATETIME_FORMAT = 'Y-m-d hh:mm'
