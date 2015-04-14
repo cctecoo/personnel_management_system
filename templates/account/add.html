@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}添加用户{% endblock %}
+{% block content %}
+    <input type="hidden" id="amd_module" value="{% static "js/views/user_add.js" %}"/>
+    <div class="container" style="margin-top:60px;">
+{#        <div class="page_header">#}
+{#            <ul class="bc">#}
+{#                <li><a href="/">主页</a> <span class="divider">/</span></li>#}
+{#                <li><a href="/account/list/">用户一览</a> <span class="divider">/</span></li>#}
+{#                <li class="active">添加用户</li>#}
+{#            </ul>#}
+{#        </div>#}
+        <form class="form-horizontal" action="/account/add/action/" id="frmAddUser" method="post">
+            {% csrf_token %}
+{#            <input type="hidden" name="redirect_url" id="redirect_url" value="{{ redirect_url|default_if_none:"" }}"/>#}
+            <div class="well well-large fly_left_well">
+                <div class="control-group">
+                    <label class="control-label" for="txtUserName">用户名</label>
+                    <div class="controls">
+                        <input type="text" id="txtUserName" name="username" class="highlight first_focus{% if form.username.errors %} error_flg{% endif %}" maxlength="30" value="{{ form.username.value|default_if_none:"" }}"/>
+                        {% if form.username.errors %}
+                            {% with form.username.errors|first as error %}
+                                <br/><span class="error_message">{{ error }}</span>
+                            {% endwith %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="txtPassword">密码</label>
+                    <div class="controls">
+                        <input type="password" id="txtPassword" name="password" maxlength="20" class="highlight{% if form.password.errors %} error_flg{% endif %}">
+                        {% if form.password.errors %}
+                            {% with form.password.errors|first as error %}
+                                <br/><span class="error_message">{{ error }}</span>
+                            {% endwith %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="txtFullName">姓名</label>
+                    <div class="controls">
+                        <input type="text" class="highlight input{% if form.last_name.errors %} error_flg{% endif %}" name="full_name" id="txtFullName" maxlength="20" value="{{ form.full_name.value|default_if_none:"" }}"/>
+                        {% if form.full_name.errors %}
+                            {% with form.full_name.errors|first as error %}
+                                <br/><span class="error_message">{{ error }}</span>
+                            {% endwith %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="role">身份</label>
+                    <div class="controls">
+                        <input type="hidden" name="role" id="id_role" value="{% if form.role.value == '1' or form.role.value == '2' or form.role.value == '3' %}{{ form.role.value }}{% else %}0{% endif %}"/>
+                        <div class="btn-group">
+                            <button class="btn" type="button" data-toggle="dropdown" id="btnRoleDisplay">
+                                {% if form.role.value == "10" %}
+                                    员工
+                                {% elif form.role.value == "20" %}
+                                    人事
+                                {% else %}
+                                    经理
+                                {% endif %}
+                            </button>
+                            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a href="#" class="dropdownItem" for="id_role" value="10">员工</a></li>
+                                <li><a href="#" class="dropdownItem" for="id_role" value="20">人事</a></li>
+                                <li><a href="#" class="dropdownItem" for="id_role" value="50">经理</a></li>
+
+                            </ul>
+                        </div>
+                        {% if form.role.errors %}
+                            {% with form.role.errors|first as error %}
+                                <br/><span class="error_message">{{ error }}</span>
+                            {% endwith %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="controls">
+                        <button type="button" id="btnSave" class="btn btn-primary default_button">保存</button>
+                        <button type="button" id="btnReturn" class="btn">返回</button>
+                    </div>
+                </div>
+                {% if form.non_field_errors %}
+                    {% with form.non_field_errors|first as error %}
+                        <div class="control-group">
+                            <div class="controls"><span class="error_message">{{ error }}</span></div>
+                        </div>
+                    {% endwith %}
+                {% endif %}
+            </div>
+        </form>
+    </div>
+{% endblock %}
