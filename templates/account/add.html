@@ -4,17 +4,15 @@
 {% block content %}
     <input type="hidden" id="amd_module" value="{% static "js/views/user_add.js" %}"/>
     <div class="container" style="margin-top:60px;">
-{#        <div class="page_header">#}
-{#            <ul class="bc">#}
-{#                <li><a href="/">主页</a> <span class="divider">/</span></li>#}
-{#                <li><a href="/account/list/">用户一览</a> <span class="divider">/</span></li>#}
-{#                <li class="active">添加用户</li>#}
-{#            </ul>#}
-{#        </div>#}
+        <div class="page_header">
+            <ul class="bc">
+                <li><a href="/">主页</a> <span class="divider">/</span></li>
+                <li><a href="/account/list/">用户一览</a> <span class="divider">/</span></li>
+                <li class="active">添加用户</li>
+            </ul>
+        </div>
         <form class="form-horizontal" action="/account/add/action/" id="frmAddUser" method="post">
             {% csrf_token %}
-            <p>User:{{ user }}</p>
-            <p>User_is_superuser:{{ user.is_superuser }}</p>
 {#            <input type="hidden" name="redirect_url" id="redirect_url" value="{{ redirect_url|default_if_none:"" }}"/>#}
             <div class="well well-large fly_left_well">
                 <div class="control-group">
@@ -54,15 +52,15 @@
                 <div class="control-group">
                     <label class="control-label" for="role">身份</label>
                     <div class="controls">
-                        <input type="hidden" name="role" id="id_role" value="{% if form.role.value == '1' or form.role.value == '2' or form.role.value == '3' %}{{ form.role.value }}{% else %}0{% endif %}"/>
+                        <input type="hidden" name="role" id="id_role" value="{% if form.role.value %}{{ form.role.value }}{% else %}10{% endif %}"/>
                         <div class="btn-group">
                             <button class="btn" type="button" data-toggle="dropdown" id="btnRoleDisplay">
-                                {% if form.role.value == "10" %}
-                                    员工
+                                {% if form.role.value == "50" %}
+                                    经理
                                 {% elif form.role.value == "20" %}
                                     人事
                                 {% else %}
-                                    经理
+                                    员工
                                 {% endif %}
                             </button>
                             <button class="btn dropdown-toggle" data-toggle="dropdown">

@@ -1,0 +1,47 @@
+{% load extfilters %}
+<div id="navbar" class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="brand" href="/">
+                <h3>HrManage</h3>
+{#                <img src="{{ STATIC_URL }}img/logo.png" alt="logo" style="margin:0;padding:0;height:28px;"/>票师傅#}
+            </a>
+            <ul class="nav nav-pills">
+            {% if user|in_group:"经理,人事" or user.is_superuser %}
+                <li class="dropdown" id="menuAccount" active-by-url="\/account\/">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#menuAccount">
+                        用户管理
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li active-by-url="\/account\/add\/"><a href="/account/add/">添加用户</a></li>
+                        <li active-by-url="\/account\/list\/"><a href="/account/list/">用户一览</a></li>
+                    </ul>
+                </li>
+            {% endif %}
+            </ul>
+            <ul class="nav pull-right">
+                {% if user.is_authenticated %}
+                    <li>
+                        {% if not user.is_superuser %}
+                            <a href="/account/{{ user.id }}/?next=/">
+                        {% else %}
+                            <a href="#">
+                        {% endif %}
+                        {% if user.get_full_name %}{{ user.get_full_name }}{% else %}{{ user.username }}{% endif %}
+                        {% if user.groups.all %}
+                        ({{ user.groups.all|first }})
+                        {% else %}
+                            {% if user.is_superuser %}
+                                (系统管理员)
+                            {% endif %}
+                        {% endif %}
+                        </a>
+                    </li>
+                    <li><a id="lnkLogout" href="/account/logout/">注销</a></li>
+                {% else %}
+                    <li><a id="lnkLogin" href="/account/login/">登录</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>

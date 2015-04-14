@@ -12,11 +12,6 @@ define([
         el:"body",
         role:$('#id_role'),
         btnRoleDisplay:$('#btnRoleDisplay'),
-        //city_id:$('#id_city_id'),
-        //btnCityDisplay:$('#btnCityDisplay'),
-        //cinema:$('#id_cinema'),
-        //btnCinemaDisplay:$('#btnCinemaDisplay'),
-        //panelCinema:$('#panelCinema'),
         in_syncing:false,  //防止两重提交标志位
 
         events:{
@@ -59,18 +54,6 @@ define([
             if (source === 'id_role') {
                 this.role.val(element.attr('value'));
                 this.btnRoleDisplay.text(element.text());
-                // 如果选择了影院，就显示影院下拉框
-                if (element.attr('value') === '3') {
-                    this.panelCinema.show();
-                } else {
-                    this.panelCinema.hide();
-                }
-            } else if (source === 'id_city_id'){
-                this.city_id.val(element.attr('value'));
-                this.btnCityDisplay.text(element.text());
-            } else {
-                this.cinema.val(element.attr('value'));
-                this.btnCinemaDisplay.text(element.text());
             }
         }
     });
