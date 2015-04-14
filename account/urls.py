@@ -9,8 +9,10 @@ urlpatterns = patterns('account.views',
     # url(r'^$', 'account.views.first_page'),
 
     # 账户操作
+    url(r'^add/$', 'user_add_view'),
+    url(r'^add/action/$', 'user_add_action'),
 
-    #  登陆待完成
+    #  登陆登出
     url(r'^login/$', "login_view"),
     url(r'^login/action/$', "login_action"),
     url(r'^logout/$', "logout_action"),

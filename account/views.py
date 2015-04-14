@@ -1,15 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import datetime
-from django.conf import settings
 
+from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render_to_response, redirect, render
 
-from account.models import UserLoginForm
+from account.models import User, UserForm, UserEditForm, UserLoginForm
+from utility import role_manager
 from utility.base_view import back_to_original_page
+from utility.exception import PermissionDeniedError
+from utility.role_manager import check_role, ROLE_STAFF
 
 
 def login_view(request):
@@ -49,3 +52,42 @@ def logout_action(request):
     """
     logout(request)
     return redirect(settings.LOGIN_URL)
+
+@login_required
+def user_add_view(request):
+    """
+    增加用户View
+    """
+    if check_role(request, ROLE_STAFF):
+        raise PermissionDeniedError
+
+    form = UserForm()
+    return render(request, "account/add.html", {
+        "form": form,
+    })
+
+
+@login_required
+def user_add_action(request):
+    """
+    增加用户
+    """
+    if check_role(request, ROLE_STAFF):
+        raise PermissionDeniedError
+
+    form = UserForm(request.POST)
+
+    if form.is_valid():
+        role = form.cleaned_data['role']
+
+        user = form.save()
+        user.set_password(form.cleaned_data['password'])
+        group = role_manager.get_role(role)
+        if group:
+            user.groups.add(group)
+        user.save()
+        return back_to_original_page(request, "/")
+    else:
+        return render(request, "account/add.html", {
+            "form": form,
+        })
