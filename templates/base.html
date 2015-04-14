@@ -13,5 +13,8 @@
     <hr>
     <p>Thanks for visiting my site.</p>
     {% endblock %}
+<script type="text/javascript" data-main="{{ STATIC_URL }}js/main"
+        src="{{ STATIC_URL }}js/lib/require-jquery.js"></script>
+{% block include_js %}{% endblock %}
 </body>
 </html>
