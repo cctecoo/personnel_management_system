@@ -13,6 +13,8 @@
 {#        </div>#}
         <form class="form-horizontal" action="/account/add/action/" id="frmAddUser" method="post">
             {% csrf_token %}
+            <p>User:{{ user }}</p>
+            <p>User_is_superuser:{{ user.is_superuser }}</p>
 {#            <input type="hidden" name="redirect_url" id="redirect_url" value="{{ redirect_url|default_if_none:"" }}"/>#}
             <div class="well well-large fly_left_well">
                 <div class="control-group">

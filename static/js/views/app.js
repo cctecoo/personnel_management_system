@@ -79,7 +79,7 @@ define([
             $('.error_flg').first().focus();
 
             // 初始化ajax logo
-            this.ajax_logo = $('<div id="ajax_logo"><img src="http://static.piaoshifu.cn/epiao/img/ajax-loader.gif"/></div>');
+            this.ajax_logo = $('<div id="ajax_logo"><img src="http://static.personnel_management_system/img/ajax-loader.gif"/></div>');
             this.ajax_logo.appendTo(this.el);
             this.on('start_ajax_sync', this.start_ajax_sync);
             this.on('finish_ajax_sync', this.finish_ajax_sync);

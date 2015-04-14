@@ -11,6 +11,8 @@ from django.shortcuts import render_to_response, redirect, render
 from account.models import User, UserForm, UserEditForm, UserLoginForm
 from utility import role_manager
 from utility.base_view import back_to_original_page
+from utility.exception import PermissionDeniedError
+from utility.role_manager import check_role, ROLE_STAFF
 
 
 def login_view(request):
@@ -56,6 +58,9 @@ def user_add_view(request):
     """
     增加用户View
     """
+    if check_role(request, ROLE_STAFF):
+        raise PermissionDeniedError
+
     form = UserForm()
     return render(request, "account/add.html", {
         "form": form,
@@ -67,6 +72,9 @@ def user_add_action(request):
     """
     增加用户
     """
+    if check_role(request, ROLE_STAFF):
+        raise PermissionDeniedError
+
     form = UserForm(request.POST)
 
     if form.is_valid():
