@@ -7,7 +7,7 @@
 {#                <img src="{{ STATIC_URL }}img/logo.png" alt="logo" style="margin:0;padding:0;height:28px;"/>票师傅#}
             </a>
             <ul class="nav nav-pills">
-            {% if user|in_group:"经理" or user.is_superuser %}
+            {% if user|in_group:"经理,人事" or user.is_superuser %}
                 <li class="dropdown" id="menuAccount" active-by-url="\/account\/">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#menuAccount">
                         用户管理

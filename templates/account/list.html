@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %} - 用户一览{% endblock %}
+{% block content %}
+    <input type="hidden" id="amd_module" value="{{ static_path }}js/views/user_list.js"/>
+    <input type="hidden" id="total_count" value="{{ total_count }}"/>
+{% for key,value in query_params.items %}
+    <input type="hidden" id="qs_{{ key }}" value="{{ value }}"/>
+{% endfor %}
+    <div class="container" style="margin-top:60px;">
+        <div class="page_header">
+            <ul class="bc">
+                <li><a href="/">主页</a> <span class="divider">/</span></li>
+                <li class="active">用户一览</li>
+            </ul>
+            <form class="form-search search_box">
+                <div class="input-append">
+                    <input type="text" class="span2 search-query" id="queryKey" value="{{ query_params.query }}">
+                    <button type="button" class="btn default_button" id="btnSearch">搜索</button>
+                </div>
+            </form>
+        </div>
+        {% if total_count == 0 %}
+            <div class="row">
+                <div class="span12 alert alert-block">
+                    <h4>注意!</h4>
+                    您搜索的结果不存在，请确认后重试。
+                </div>
+                <div class="span12">
+                    <a class="btn btn-primary" href="/account/add/">添加用户</a>
+                </div>
+            </div>
+        {% else %}
+            <div class="row">
+                <div class="span4">
+                    <div class="btn-toolbar">
+                        <div class="btn-group">
+                            <a class="btn" id="btnNew" href="/account/add/" title="添加"><i class="icon-plus"></i></a>
+                            <a class="btn disabled" id="btnEdit" title="修改"><i class="icon-edit"></i></a>、
+                            <a class="btn disabled" id="btnDelete" title="删除"><i class="icon-trash"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="span4" style="text-align: right;padding-top: 20px;">
+                    <span class="label">共{{ total_count }}条记录</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span8">
+                    <div class="search_result_list">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th class="check_column"><input type="checkbox" id="checkSelectAll"/></th>
+                                <th><a href="#" class="data_column" sort_key="un">帐号</a></th>
+                                <th><a href="#" class="data_column" sort_key="fn">姓名</a></th>
+                                <th><a href="#" class="data_column" sort_key="cd">创建日期</a></th>
+                                <th><a href="#" class="data_column" sort_key="gr">身份</a></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for user in users %}
+                                <tr>
+                                    <td class="cell_center"><input type="checkbox" class="list_selector" pk="{{ user.id }}"/></td>
+                                    <td>
+                                        <a href="/account/{{ user.id }}/" class="btn-link edit_link">{{ user.username }}</a>
+                                    </td>
+                                    <td>{{ user.get_full_name }}</td>
+                                    <td>{{ user.create_datetime|date:"Y/m/d H:i:s" }}</td>
+                                    <td>{{ user.groups.all|first }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        {% if need_pagination %}
+                            <div class="pagination pagination-centered pagination-small" style="margin-top:-10px;">
+                                <ul>
+                                    <li id="btnPrevPage"><a href="#">前页</a></li>
+                                    <li id="btnNextPage"><a href="#">次页</a></li>
+                                </ul>
+                                <div class="pull-right label" id="lblPageCounter">
+                                    0/0页
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    <form action="/account/delete/action/" method="post" id="frmDeleteUser">
+        {% csrf_token %}
+        <input type="hidden" name="pk" id="pk"/>
+        <input type="hidden" name="redirect_url" id="redirect_url" value="{{ url_path }}"/>
+    </form>
+{% endblock %}
