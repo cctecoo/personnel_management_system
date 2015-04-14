@@ -42,7 +42,6 @@ def login_action(request):
 
     return render(request, "account/login.html", {
         "form": form,
-        "app_version": settings.APP_VERSION,
     })
 
 
