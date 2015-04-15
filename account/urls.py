@@ -11,6 +11,9 @@ urlpatterns = patterns('account.views',
     # 账户操作
     url(r'^add/$', 'user_add_view'),
     url(r'^add/action/$', 'user_add_action'),
+    url(r'^delete/action/$', 'user_delete_action'),
+    url(r'^edit/(\d*)/$', 'user_edit_view'),
+    url(r'^edit/action/$', 'user_edit_action'),
     url(r'^list/$', 'user_list_view'),
     url(r'^(\d*)/$', 'user_view_view'),
 

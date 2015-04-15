@@ -12,7 +12,8 @@ from account.models import User, UserForm, UserEditForm, UserLoginForm
 from utility import role_manager
 from utility.base_view import back_to_original_page, get_list_params
 from utility.exception import PermissionDeniedError
-from utility.role_manager import check_role, ROLE_STAFF, ROLE_MANAGER, ROLE_HR, ROLES, ROLE_SYSADMIN, get_role_id
+from utility.role_manager import check_role, ROLE_STAFF, ROLE_MANAGER, ROLE_HR, ROLES, ROLE_SYSADMIN, get_role_id, \
+    check_permission_allowed
 
 
 def login_view(request):
@@ -147,8 +148,11 @@ def user_list_view(request):
 @login_required
 def user_view_view(request, id):
     """
-    编辑用户视图
+    查看用户视图
     """
+    if not check_permission_allowed(request, id):
+        raise PermissionDeniedError
+
     user = get_object_or_404(User, id=id)
     role_name = None
     if user.groups.count() > 0:
@@ -156,20 +160,106 @@ def user_view_view(request, id):
     form = UserForm(instance=user)
     role_id = get_role_id(role_name) if role_name else None
 
-    # 只能查看自己或者低于自己权限用户
-    if check_role(request, ROLE_MANAGER) and ((role_id == ROLE_MANAGER and user.username != request.user.username)
-                                              or user.is_superuser):
-        raise PermissionDeniedError
-
-    if check_role(request, ROLE_HR) and ((role_id == ROLE_HR and user.username != request.user.username)
-                                         or role_id not in (ROLE_STAFF, ROLE_HR)):
-        raise PermissionDeniedError
-
-    if check_role(request, ROLE_STAFF) and user.username != request.user.username:
-        raise PermissionDeniedError
-
     return render(request, "account/view.html", {
         "form": form,
         "role": role_id,
         "role_name": role_name,
     })
+
+
+@login_required
+def user_delete_action(request):
+    """
+    删除用户
+    """
+    if check_role(request, ROLE_STAFF):
+        raise PermissionDeniedError
+
+    # if not request.POST.has_key('pk'):
+    #     raise InvalidPostDataError()
+    pk = request.POST["pk"]
+    pks = []
+    for key in pk.split(','):
+        # if key and is_int(key):
+        if key:
+            pks.append(int(key))
+
+    User.objects.filter(id__in=pks).update(is_active=False)
+    return back_to_original_page(request, '/account/list/')
+
+
+@login_required
+def user_edit_view(request, id):
+    """
+    编辑用户视图
+    """
+    if not check_permission_allowed(request, id):
+        raise PermissionDeniedError
+
+    user = get_object_or_404(User, id=id)
+
+    form = UserForm(instance=user)
+    if user.groups.count() > 0:
+        role_name = user.groups.get().name
+    else:
+        role_name = None
+    return render(request, "account/edit.html", {
+        "form": form,
+        "id": id,
+        "role": get_role_id(role_name),
+        "role_name": role_name,
+        # "update_timestamp": crypt.encryt(unicode(user.update_datetime))
+    })
+
+
+@login_required
+def user_edit_action(request):
+    """
+    编辑用户动作
+    """
+    # if not request.POST.has_key('id'):
+    #     raise InvalidPostDataError()
+    id = request.POST['id']
+
+    if not check_permission_allowed(request, id):
+        raise PermissionDeniedError
+
+    user = get_object_or_404(User, id=id)
+
+    if request.POST.has_key('password'):
+        form = UserForm(request.POST, instance=user)
+    else:
+        form = UserEditForm(request.POST, instance=user)
+
+    if form.is_valid():
+        # 数据一致性校验
+        # if not 'update_timestamp' in request.POST or crypt.loads(request.POST["update_timestamp"]) != unicode(
+        #         user.update_datetime):
+        #     raise DataExclusivityError()
+        if request.user.is_superuser:
+            role = form.cleaned_data['role']
+            group = role_manager.get_role(role)
+            if group:
+                user.groups.clear()
+                user.groups.add(group)
+        user.full_name = form.cleaned_data['full_name']
+
+        if not isinstance(form, UserEditForm):
+            user.set_password(form.cleaned_data['password'])
+            user.save(update_fields=("full_name", "password", "update_datetime"))
+        else:
+            user.save(update_fields=("full_name", "update_datetime"))
+
+        # 员工没有访问list权限,所以这里返回index
+        if check_role(request, ROLE_STAFF):
+            return back_to_original_page(request, "/")
+        return back_to_original_page(request, "/account/list/")
+    else:
+        role = form.cleaned_data['role'] if 'role' in form.cleaned_data else None
+        return render(request, "account/edit.html", {
+            "form": form,
+            "id": id,
+            "role": role,
+            "role_name": ROLES[role] if role in ROLES else "",
+            # "update_timestamp": crypt.encryt(unicode(user.update_datetime))
+        })
