@@ -113,7 +113,6 @@ class User(PermissionsMixin):
 
 class UserForm(ModelForm):
     role = forms.IntegerField()
-    cinema = forms.CharField(required=False)
 
     class Meta:
         model = User
@@ -134,7 +133,6 @@ class UserForm(ModelForm):
 
 
 class UserEditForm(UserForm):
-    city_id = forms.IntegerField()
 
     class Meta:
         model = User

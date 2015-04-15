@@ -23,7 +23,7 @@ define([
             'order_field':$('#qs_order_field').val()
         },
         total_count:parseInt($('#total_count').val()),
-        url:'/epiao_account/list/?',
+        url:'/account/list/?',
         btnNextPage:$('#btnNextPage'),
         btnPrevPage:$('#btnPrevPage'),
         lblPageCounter:$('#lblPageCounter'),
@@ -124,7 +124,7 @@ define([
         // 编辑用户
         editUser:function() {
             var pk = $('.list_selector:checked').attr('pk');
-            var url = '/epiao_account/edit/' + pk + '/';
+            var url = '/account/edit/' + pk + '/';
             window.location.href = url + '?' + this.options.parentView.get_next_link();
         },
 
