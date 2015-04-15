@@ -53,7 +53,7 @@
     <div class="container" style="margin-top:30px;">
         <form class="form-signin" action="/account/login/action/" id="frmLogin" method="post">
             {% csrf_token %}
-{#            <input type="hidden" name="redirect_url" id="redirect_url" value="{{ redirect_url|default_if_none:"" }}"/>#}
+            <input type="hidden" name="redirect_url" id="redirect_url" value="{{ redirect_url|default_if_none:"" }}"/>
             <h2 class="form-signin-heading">人事管理系统</h2>
             <input type="text" name="username" class="input-block-level first_focus{% if form.username.errors %} error_flg{% endif %}" placeholder="帐号" maxlength="30" value="{{ form.username.value }}">
             {% with form.username.errors|first as error %}

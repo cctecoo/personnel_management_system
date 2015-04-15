@@ -6,13 +6,13 @@ from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from django.shortcuts import render_to_response, redirect, render
+from django.shortcuts import render_to_response, redirect, render, get_object_or_404
 
 from account.models import User, UserForm, UserEditForm, UserLoginForm
 from utility import role_manager
 from utility.base_view import back_to_original_page, get_list_params
 from utility.exception import PermissionDeniedError
-from utility.role_manager import check_role, ROLE_STAFF, ROLE_MANAGER, ROLE_HR, ROLES
+from utility.role_manager import check_role, ROLE_STAFF, ROLE_MANAGER, ROLE_HR, ROLES, ROLE_SYSADMIN, get_role_id
 
 
 def login_view(request):
@@ -51,6 +51,7 @@ def logout_action(request):
     """
     logout(request)
     return redirect(settings.LOGIN_URL)
+
 
 @login_required
 def user_add_view(request):
@@ -114,7 +115,6 @@ def user_list_view(request):
         u"fn": "full_name",
         u"cd": "create_datetime",
         u"gr": "groups",
-        u"ci": "city_id",
     }
 
     # 搜索条件
@@ -143,33 +143,33 @@ def user_list_view(request):
         "total_count": total_count,
     })
 
-#
-# @login_required
-# def user_view_view(request, id):
-#     """
-#     编辑用户视图
-#     """
-#     #维修员不能修改其他人的账户信息
-#     if request.user.id != long(id) and not check_role(request, ROLE_MANAGER) \
-#             and not check_role(request, ROLE_SYSADMIN) and not check_role(request, ROLE_CHANNEL_MANAGER) \
-#             and not check_role(request, ROLE_SALES_MANAGER):
-#         raise PermissionDeniedError
-#
-#     user = get_object_or_404(User, id=id)
-#     role_name = None
-#     if user.groups.count() > 0:
-#         role_name = user.groups.get().name
-#     form = UserForm(instance=user)
-#     client_name = None
-#     role_id = get_role_id(role_name) if role_name else None
-#     if role_id == 3 and user.belong_to_client is not None:
-#         client_name = user.belong_to_client.name
-#
-#     return render_page(request, "epiao_account/view.html", {
-#         "form": form,
-#         "role": role_id,
-#         "city_name": user.get_city_name(),
-#         "role_name": role_name,
-#         "client_name": client_name
-#     })
-#     # 用户表维护 end
+
+@login_required
+def user_view_view(request, id):
+    """
+    编辑用户视图
+    """
+    user = get_object_or_404(User, id=id)
+    role_name = None
+    if user.groups.count() > 0:
+        role_name = user.groups.get().name
+    form = UserForm(instance=user)
+    role_id = get_role_id(role_name) if role_name else None
+
+    # 只能查看自己或者低于自己权限用户
+    if check_role(request, ROLE_MANAGER) and ((role_id == ROLE_MANAGER and user.username != request.user.username)
+                                              or user.is_superuser):
+        raise PermissionDeniedError
+
+    if check_role(request, ROLE_HR) and ((role_id == ROLE_HR and user.username != request.user.username)
+                                         or role_id not in (ROLE_STAFF, ROLE_HR)):
+        raise PermissionDeniedError
+
+    if check_role(request, ROLE_STAFF) and user.username != request.user.username:
+        raise PermissionDeniedError
+
+    return render(request, "account/view.html", {
+        "form": form,
+        "role": role_id,
+        "role_name": role_name,
+    })

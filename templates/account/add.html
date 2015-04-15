@@ -13,7 +13,7 @@
         </div>
         <form class="form-horizontal" action="/account/add/action/" id="frmAddUser" method="post">
             {% csrf_token %}
-{#            <input type="hidden" name="redirect_url" id="redirect_url" value="{{ redirect_url|default_if_none:"" }}"/>#}
+            <input type="hidden" name="redirect_url" id="redirect_url" value="{{ redirect_url|default_if_none:"" }}"/>
             <div class="well well-large fly_left_well">
                 <div class="control-group">
                     <label class="control-label" for="txtUserName">用户名</label>

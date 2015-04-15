@@ -1,7 +1,8 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 {% block title %} - 用户一览{% endblock %}
 {% block content %}
-    <input type="hidden" id="amd_module" value="{{ static_path }}js/views/user_list.js"/>
+    <input type="hidden" id="amd_module" value="{% static "js/views/user_list.js" %}"/>
     <input type="hidden" id="total_count" value="{{ total_count }}"/>
 {% for key,value in query_params.items %}
     <input type="hidden" id="qs_{{ key }}" value="{{ value }}"/>

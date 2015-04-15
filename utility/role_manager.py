@@ -38,4 +38,8 @@ def check_role(request, role):
         return True
 
     user = request.user
-    return ROLES.has_key(role) and user.groups.filter(name=ROLES[role]).exists()
+    return ROLES. has_key(role) and user.groups.filter(name=ROLES[role]).exists()
+
+
+# 检查当前用户是否符合操作权限级别
+# 既只能对自己或者低于自己权限用户进行操作
