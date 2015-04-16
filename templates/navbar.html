@@ -19,6 +19,21 @@
                 </li>
             {% endif %}
             </ul>
+
+            <ul class="nav nav-pills">
+            {% if not user.is_superuser %}
+                <li class="dropdown" id="menuInformation" active-by-url="\/information\/">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#menuInformation">
+                        基础信息
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li active-by-url="\/information\/personal\/"><a href="/information/personal/{{ user.id }}">个人信息</a></li>
+                        <li active-by-url="\/information\/contacts\/"><a href="/information/contacts/">通讯录</a></li>
+                    </ul>
+                </li>
+            {% endif %}
+            </ul>
+
             <ul class="nav pull-right">
                 {% if user.is_authenticated %}
                     <li>

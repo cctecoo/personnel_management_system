@@ -22,4 +22,7 @@ urlpatterns = patterns('',
 
     # 账户管理模块
     url(r'^account/', include('account.urls')),
+
+    # 基础信息模块
+    url(r'^information/', include('information.urls')),
 )
