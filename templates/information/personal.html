@@ -33,6 +33,7 @@
                                 <div class="tab-pane fade active in" id="tab_info">
                                     <form class="form-horizontal" action="/information/personal/{{ id }}/edit/action/" id="frmEditInfo" method="post">
                                     {% csrf_token %}
+{#                                    <div class="modal hide fade" id="ToInfoForm"></div>#}
                                     <input type="hidden" name="id" id="pk" value="{{ id }}"/>
                                     <input type="hidden" name="validation" id="id_validation" value="{{ validation }}">
                                     <div class="control-group">
@@ -66,10 +67,10 @@
                                     <div class="control-group">
                                         <label class="control-label" for="id_sex">性别</label>
                                         <div class="controls">
-                                            <input type="hidden" name="status" id="id_sex" value="{% if form.personal.sex %}{{ form.personal.sex }}{% else %}1{% endif %}"/>
+                                            <input type="hidden" name="sex" id="id_sex" value="{% if form.sex %}{{ form.sex }}{% else %}1{% endif %}"/>
                                             <div class="btn-group">
                                                 <button class="btn" type="button" data-toggle="dropdown" id="id_sex_trigger">
-                                                    {% if form.personal.sex %}{{ form.sex|get_sex_name }}{% else %}男{% endif %}
+                                                    {% if form.sex %}{{ form.sex|get_sex_name }}{% else %}男{% endif %}
                                                 </button>
                                                 <button class="btn dropdown-toggle" data-toggle="dropdown">
                                                     <span class="caret"></span>
