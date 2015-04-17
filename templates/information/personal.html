@@ -31,91 +31,61 @@
 
                             <div class="tab-content" id="id_contents">
                                 <div class="tab-pane fade active in" id="tab_info">
-                                    <form class="form-horizontal" action="/activity/{{ activity_kind }}/edit/action/" id="frmEditActivity" method="post">
+                                    <form class="form-horizontal" action="/information/personal/{{ id }}/edit/action/" id="frmEditInfo" method="post">
                                     {% csrf_token %}
-                                    <input type="hidden" name="id" id="pk" value="{{ form.instance.id }}"/>
+                                    <input type="hidden" name="id" id="pk" value="{{ id }}"/>
+                                    <input type="hidden" name="validation" id="id_validation" value="{{ validation }}">
                                     <div class="control-group">
-                                        <label class="control-label" for="id_place">员工编号</label>
+                                        <label class="control-label" for="id_info">员工编号</label>
                                         <div class="controls">
-                                            <input type="text" id="id_place" name="place" class="highlight first_focus{% if form.city.errors %} error_flg{% endif %}"
-                                                   maxlength="30" disabled="disabled" value="{{ form.place.value|default_if_none:"" }}"/>
-                                            {% if form.place.errors %}
-                                                {% with form.place.errors|first as error %}
-                                                    <br/>
-                                                    <span class="error_message">{{ error }}</span>
-                                                {% endwith %}
-                                            {% endif %}
+                                            <input type="text" id="id_info" name="personal_id" class="highlight first_focus"
+                                                   maxlength="30" disabled="disabled" value="{{ id }}"/>
                                         </div>
                                     </div>
                                     <div class="control-group">
-                                        <label class="control-label" for="id_place">姓名</label>
+                                        <label class="control-label" for="id_full_name">姓名</label>
                                         <div class="controls">
-                                            <input type="text" id="id_place" name="place" class="highlight first_focus{% if form.city.errors %} error_flg{% endif %}"
-                                                   maxlength="30" disabled="disabled" value="{{ form.place.value|default_if_none:"" }}"/>
-                                            {% if form.place.errors %}
-                                                {% with form.place.errors|first as error %}
-                                                    <br/>
-                                                    <span class="error_message">{{ error }}</span>
-                                                {% endwith %}
-                                            {% endif %}
+                                            <input type="text" id="id_full_name" name="full_name" class="highlight first_focus"
+                                                   maxlength="30" disabled="disabled" value="{{ full_name }}"/>
+                                        </div>
+                                    </div>
+{#                                    <div class="control-group">#}
+{#                                        <label class="control-label" for="id_department">所属部门</label>#}
+{#                                        <div class="controls">#}
+{#                                            <input type="text" id="id_department" name="department" class="highlight first_focus"#}
+{#                                                   maxlength="30" disabled="disabled" value="{{ form.personal.department.name|default_if_none:"" }}"/>#}
+{#                                        </div>#}
+{#                                    </div>#}
+                                    <div class="control-group">
+                                        <label class="control-label" for="id_role">身份</label>
+                                        <div class="controls">
+                                            <input type="text" id="id_full_name" name="full_name" class="highlight first_focus"
+                                                   maxlength="30" disabled="disabled" value="{{ role_name }}"/>
                                         </div>
                                     </div>
                                     <div class="control-group">
-                                        <label class="control-label" for="id_place">所属部门</label>
+                                        <label class="control-label" for="id_sex">性别</label>
                                         <div class="controls">
-                                            <input type="text" id="id_place" name="place" class="highlight first_focus{% if form.city.errors %} error_flg{% endif %}"
-                                                   maxlength="30" disabled="disabled" value="{{ form.place.value|default_if_none:"" }}"/>
-                                            {% if form.place.errors %}
-                                                {% with form.place.errors|first as error %}
-                                                    <br/>
-                                                    <span class="error_message">{{ error }}</span>
-                                                {% endwith %}
-                                            {% endif %}
-                                        </div>
-                                    </div>
-
-                                    <div class="control-group">
-                                        <label class="control-label" for="role">身份</label>
-                                        <div class="controls">
-                                            <input type="hidden" name="role" id="id_role" value="{{ role }}"/>
+                                            <input type="hidden" name="status" id="id_sex" value="{% if form.personal.sex %}{{ form.personal.sex }}{% else %}1{% endif %}"/>
                                             <div class="btn-group">
-                                                <button class="btn" type="button" {% if not user.is_superuser %}disabled="disabled"{% endif %} data-toggle="dropdown" id="btnRoleDisplay">{{ role_name }}</button>
-                                                <button class="btn dropdown-toggle" data-toggle="dropdown" {% if not user.is_superuser %}disabled="disabled"{% endif %} >
+                                                <button class="btn" type="button" data-toggle="dropdown" id="id_sex_trigger">
+                                                    {% if form.personal.sex %}{{ form.sex|get_sex_name }}{% else %}男{% endif %}
+                                                </button>
+                                                <button class="btn dropdown-toggle" data-toggle="dropdown">
                                                     <span class="caret"></span>
                                                 </button>
                                                 <ul class="dropdown-menu">
-                                                    <li><a href="#" class="dropdownItem" for="id_role" value="10">员工</a></li>
-                                                    <li><a href="#" class="dropdownItem" for="id_role" value="20">人事</a></li>
-                                                    <li><a href="#" class="dropdownItem" for="id_role" value="50">经理</a></li>
+                                                    <li><a href="#" class="dropdownItem" for="id_sex" value="1">男</a></li>
+                                                    <li><a href="#" class="dropdownItem" for="id_sex" value="2">女</a></li>
                                                 </ul>
                                             </div>
-                                            {% if form.role.errors %}
-                                                {% with form.role.errors|first as error %}
-                                                    <br/><span class="error_message">{{ error }}</span>
-                                                {% endwith %}
-                                            {% endif %}
                                         </div>
                                     </div>
-
                                     <div class="control-group">
-                                        <label class="control-label" for="role">性别</label>
+                                        <label class="control-label" for="id_update_datetime">更新时间</label>
                                         <div class="controls">
-                                            <input type="hidden" name="role" id="id_role" value="{{ role }}"/>
-                                            <div class="btn-group">
-                                                <button class="btn" type="button" {% if not user.is_superuser %}disabled="disabled"{% endif %} data-toggle="dropdown" id="btnRoleDisplay">{{ role_name }}</button>
-                                                <button class="btn dropdown-toggle" data-toggle="dropdown" >
-                                                    <span class="caret"></span>
-                                                </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><a href="#" class="dropdownItem" for="id_role" value="1">男</a></li>
-                                                    <li><a href="#" class="dropdownItem" for="id_role" value="2">女</a></li>
-                                                </ul>
-                                            </div>
-                                            {% if form.role.errors %}
-                                                {% with form.role.errors|first as error %}
-                                                    <br/><span class="error_message">{{ error }}</span>
-                                                {% endwith %}
-                                            {% endif %}
+                                            <input type="text" id="id_update_datetime" name="full_name" class="highlight first_focus"
+                                                   maxlength="30" disabled="disabled" value="{{ form.update_datetime|format_date }}"/>
                                         </div>
                                     </div>
 
@@ -158,15 +128,15 @@
                         </div>
                     </div>
 
-                {% if form.non_field_errors %}
-                    {% with form.non_field_errors|first as error %}
-                        <div class="control-group">
-                            <div class="controls"><span class="error_message">{{ error }}</span></div>
-                        </div>
-                    {% endwith %}
-                {% endif %}
+{#                {% if form.non_field_errors %}#}
+{#                    {% with form.non_field_errors|first as error %}#}
+{#                        <div class="control-group">#}
+{#                            <div class="controls"><span class="error_message">{{ error }}</span></div>#}
+{#                        </div>#}
+{#                    {% endwith %}#}
+{#                {% endif %}#}
             </div>
         </div>
+        <div class="modal hide fade" id="goodsFormModal"></div>
     </div>
-
 {% endblock %}

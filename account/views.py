@@ -9,6 +9,7 @@ from django.http import HttpResponse
 from django.shortcuts import render_to_response, redirect, render, get_object_or_404
 
 from account.models import User, UserForm, UserEditForm, UserLoginForm
+from information.models import Personal
 from utility import role_manager
 from utility.base_view import back_to_original_page, get_list_params
 from utility.exception import PermissionDeniedError
@@ -92,6 +93,9 @@ def user_add_action(request):
         group = role_manager.get_role(role)
         if group:
             user.groups.add(group)
+        if not user.is_superuser:
+            personal = Personal.objects.create()
+            user.personal_id = personal.id
         user.save()
         return back_to_original_page(request, "/account/list/")
     else:
