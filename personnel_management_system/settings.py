@@ -52,7 +52,7 @@ USE_I18N = True
 USE_L10N = True
 
 # If you set this to False, Django will not use timezone-aware datetimes.
-USE_TZ = True
+USE_TZ = False
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
@@ -131,6 +131,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
     'account',
+    'information',
 )
 
 # 自定义User Model
@@ -169,7 +170,7 @@ LOGGING = {
 
 LOGIN_URL = '/account/login/'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-DATE_INPUT_FORMATS = ('%Y/%m/%d',)
+DATE_INPUT_FORMATS = ('%Y/%m/%d', '%Y/%m/%d %H:%M:%S')
 DATE_FORMAT = 'Y/m/d'
 DATETIME_INPUT_FORMATS = ('%Y-%m-%d %H:%M',)
 DATETIME_FORMAT = 'Y-m-d hh:mm'

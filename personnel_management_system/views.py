@@ -7,13 +7,10 @@ from django.http import HttpResponse
 from django.shortcuts import render_to_response, render
 
 
-@login_required(login_url='/account/login/')
+@login_required
 def index_view(request):
     """
     首页View
     """
-    now = datetime.datetime.now()
 
-    return render(request, 'index/index.html',
-                  {'current_now': now,
-                   })
+    return render(request, 'index/index.html',)

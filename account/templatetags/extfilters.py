@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 __author__ = 'cc'
-
+from datetime import date
 
 from django import template
 from django.db import connection
@@ -33,3 +33,20 @@ def in_group(user, groups):
     """
     group_list = force_unicode(groups).split(',')
     return bool(user.groups.filter(name__in=group_list).values('name'))
+
+
+@register.filter(name='get_sex_name')
+def get_sex_name(value):
+    """取得性别中文"""
+    if value == 1:
+        return u"男"
+    else:
+        return u"女"
+
+
+@register.filter(name='format_date')
+def format_date(value):
+    if isinstance(value, date):
+        return value.strftime(settings.DATE_INPUT_FORMATS[1])
+    else:
+        return value

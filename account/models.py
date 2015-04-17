@@ -11,6 +11,8 @@ from django.forms import ModelForm, Form
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
+from information.models import Personal
+
 
 class MyUserManage(UserManager):
     def create_user(self, username, password=None, **extra_fields):
@@ -41,6 +43,7 @@ class User(PermissionsMixin):
     password = models.CharField(_('password'), max_length=128)
     last_login = models.DateTimeField(_('date joined'), default=datetime.datetime.now())
     is_active = models.BooleanField(default=True)
+    personal = models.ForeignKey(Personal, null=True, blank=True, related_name="belong_to")  # 所属个人信息
     USERNAME_FIELD = "username"
     objects = MyUserManage()
     REQUIRED_FIELDS = []
