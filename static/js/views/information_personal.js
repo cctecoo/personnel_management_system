@@ -171,19 +171,24 @@ define([
             this.options.parentView.trigger('start_ajax_sync');
             var form = $('#frmEditInfo');
             $.ajax({
-                type: "GET",
+                type: "POST",
                 url: form.attr('action'),
+                data: form.serialize(),
                 success: function(data){
                     if (data.error_code > 0) {
                         window.alert(data.error_msg);
                     }else {
-                        var validation = $('#id_validation').val();
-                        if (validation === "True") {
+                        //var InfoForm = $("#frmEditInfo", data);
+                        //$('#ToInfoForm').html(InfoForm);
+                        //var validation = $('#id_validation').val();
+                        var validation = data.validation;
+                        if (validation === true) {
+                            alert("编辑成功");
+                            var myDate = new Date();
+                            $('#id_update_datetime').val(myDate.toLocaleString());
+                            //日期格式待完善
                             $('.tip').tooltip();
-                            alert("hah");
-
-                        }
-                        else {
+                        }else {
                             alert("error");
                         }
                     }

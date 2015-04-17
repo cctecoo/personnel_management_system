@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import datetime
+import json
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render_to_response, redirect, render, get_object_or_404
+from django.template import RequestContext
 
 from account.models import User, UserForm
 from information.models import Personal, PersonalForm
@@ -36,10 +38,14 @@ def information_personal_view(request, id):
     })
 
 
+@login_required
 def information_personal_edit_action(request, id):
     """
     编辑个人信息action
     """
+    if not check_permission_allowed(request, id):
+        raise PermissionDeniedError
+    response_data = {}
     queryset = Personal.objects.filter(belong_to__id=id).get()
     form = PersonalForm(request.POST, instance=queryset)
 
@@ -48,16 +54,20 @@ def information_personal_edit_action(request, id):
         form.instance.sex = request.POST['sex']
         form.save()
 
-        return render_to_response("information/personal.html", {
-            'result': 'OK',
-            'validation': True,
-            'form': form,
-        })
+        # return render_to_response("information/personal.html", {
+        #     'result': 'OK',
+        #     'validation': True,
+        #     'form': form,
+        # },  context_instance=RequestContext(request))
+        response_data['validation'] = True
+        return HttpResponse(json.dumps(response_data), mimetype="application/json")
 
     else:
-        return render_to_response("information/personal.html", {
-            'result': 'OK',
-            'validation': False,
-            'form': form,
-        })
+        # return render_to_response("information/personal.html", {
+        #     'result': 'OK',
+        #     'validation': False,
+        #     'form': form,
+        # },  context_instance=RequestContext(request))
+        response_data['validation'] = False
+        return HttpResponse(json.dumps(response_data), mimetype="application/json")
 
