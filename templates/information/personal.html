@@ -32,97 +32,143 @@
                             <div class="tab-content" id="id_contents">
                                 <div class="tab-pane fade active in" id="tab_info">
                                     <form class="form-horizontal" action="/information/personal/{{ id }}/edit/action/" id="frmEditInfo" method="post">
-                                    {% csrf_token %}
-{#                                    <div class="modal hide fade" id="ToInfoForm"></div>#}
-                                    <input type="hidden" name="id" id="pk" value="{{ id }}"/>
-                                    <input type="hidden" name="validation" id="id_validation" value="{{ validation }}">
-                                    <div class="control-group">
-                                        <label class="control-label" for="id_info">员工编号</label>
-                                        <div class="controls">
-                                            <input type="text" id="id_info" name="personal_id" class="highlight first_focus"
-                                                   maxlength="30" disabled="disabled" value="{{ id }}"/>
-                                        </div>
-                                    </div>
-                                    <div class="control-group">
-                                        <label class="control-label" for="id_full_name">姓名</label>
-                                        <div class="controls">
-                                            <input type="text" id="id_full_name" name="full_name" class="highlight first_focus"
-                                                   maxlength="30" disabled="disabled" value="{{ full_name }}"/>
-                                        </div>
-                                    </div>
-{#                                    <div class="control-group">#}
-{#                                        <label class="control-label" for="id_department">所属部门</label>#}
-{#                                        <div class="controls">#}
-{#                                            <input type="text" id="id_department" name="department" class="highlight first_focus"#}
-{#                                                   maxlength="30" disabled="disabled" value="{{ form.personal.department.name|default_if_none:"" }}"/>#}
-{#                                        </div>#}
-{#                                    </div>#}
-                                    <div class="control-group">
-                                        <label class="control-label" for="id_role">身份</label>
-                                        <div class="controls">
-                                            <input type="text" id="id_full_name" name="full_name" class="highlight first_focus"
-                                                   maxlength="30" disabled="disabled" value="{{ role_name }}"/>
-                                        </div>
-                                    </div>
-                                    <div class="control-group">
-                                        <label class="control-label" for="id_sex">性别</label>
-                                        <div class="controls">
-                                            <input type="hidden" name="sex" id="id_sex" value="{% if form.sex %}{{ form.sex }}{% else %}1{% endif %}"/>
-                                            <div class="btn-group">
-                                                <button class="btn" type="button" data-toggle="dropdown" id="id_sex_trigger">
-                                                    {% if form.sex %}{{ form.sex|get_sex_name }}{% else %}男{% endif %}
-                                                </button>
-                                                <button class="btn dropdown-toggle" data-toggle="dropdown">
-                                                    <span class="caret"></span>
-                                                </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><a href="#" class="dropdownItem" for="id_sex" value="1">男</a></li>
-                                                    <li><a href="#" class="dropdownItem" for="id_sex" value="2">女</a></li>
-                                                </ul>
+                                        {% csrf_token %}
+    {#                                    <div class="modal hide fade" id="ToInfoForm"></div>#}
+                                        <input type="hidden" name="id" id="pk" value="{{ id }}"/>
+                                        <input type="hidden" name="validation" id="id_validation" value="{{ validation }}">
+                                        <div class="control-group">
+                                            <label class="control-label" for="id_info">员工编号</label>
+                                            <div class="controls">
+                                                <input type="text" id="id_info" name="personal_id" class="highlight first_focus"
+                                                       maxlength="30" disabled="disabled" value="{{ id }}"/>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="control-group">
-                                        <label class="control-label" for="id_update_datetime">更新时间</label>
-                                        <div class="controls">
-                                            <input type="text" id="id_update_datetime" name="full_name" class="highlight first_focus"
-                                                   maxlength="30" disabled="disabled" value="{{ form.update_datetime|format_date }}"/>
+                                        <div class="control-group">
+                                            <label class="control-label" for="id_full_name">姓名</label>
+                                            <div class="controls">
+                                                <input type="text" id="id_full_name" name="full_name" class="highlight first_focus"
+                                                       maxlength="30" disabled="disabled" value="{{ full_name }}"/>
+                                            </div>
                                         </div>
-                                    </div>
+    {#                                    <div class="control-group">#}
+    {#                                        <label class="control-label" for="id_department">所属部门</label>#}
+    {#                                        <div class="controls">#}
+    {#                                            <input type="text" id="id_department" name="department" class="highlight first_focus"#}
+    {#                                                   maxlength="30" disabled="disabled" value="{{ form.personal.department.name|default_if_none:"" }}"/>#}
+    {#                                        </div>#}
+    {#                                    </div>#}
+                                        <div class="control-group">
+                                            <label class="control-label" for="id_role">身份</label>
+                                            <div class="controls">
+                                                <input type="text" id="id_full_name" name="full_name" class="highlight first_focus"
+                                                       maxlength="30" disabled="disabled" value="{{ role_name }}"/>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <label class="control-label" for="id_sex">性别</label>
+                                            <div class="controls">
+                                                <input type="hidden" name="sex" id="id_sex" value="{% if form.sex %}{{ form.sex }}{% else %}1{% endif %}"/>
+                                                <div class="btn-group">
+                                                    <button class="btn" type="button" data-toggle="dropdown" id="id_sex_trigger">
+                                                        {% if form.sex %}{{ form.sex|get_sex_name }}{% else %}男{% endif %}
+                                                    </button>
+                                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                        <span class="caret"></span>
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        <li><a href="#" class="dropdownItem" for="id_sex" value="1">男</a></li>
+                                                        <li><a href="#" class="dropdownItem" for="id_sex" value="2">女</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <label class="control-label" for="id_update_datetime">更新时间</label>
+                                            <div class="controls">
+                                                <input type="text" id="id_update_datetime" name="full_name" class="highlight first_focus"
+                                                       maxlength="30" disabled="disabled" value="{{ form.update_datetime|format_datetime }}"/>
+                                            </div>
+                                        </div>
 
-                                    <div class="control-group">
-                                        <div class="controls">
-                                            <button type="button" id="btnSave" class="btn btn-primary default_button">保存</button>
-{#                                          <button type="button" id="btnReturn" class="btn">返回</button>#}
+                                        <div class="control-group">
+                                            <div class="controls">
+                                                <button type="button" id="btnSave" class="btn btn-primary default_button">保存</button>
+    {#                                          <button type="button" id="btnReturn" class="btn">返回</button>#}
+                                            </div>
                                         </div>
-                                    </div>
                                     </form>
                                 </div>
 
                                 <div class="tab-pane fade " id="tab_job">
-                                    <form class="form-horizontal" action="/activity/{{ activity_kind }}/edit/action/" id="frmEditActivity" method="post">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="id" id="pk" value="{{ form.instance.id }}"/>
-                                    <div class="control-group">
-                                        <label class="control-label" for="id_kind">2</label>
-                                        <div class="controls">
-                                            <div class="btn-group">
-                                                <button class="btn" type="button" style="min-width:194px;text-align:left"  data-toggle="dropdown" id="id_kind_trigger" disabled="disabled">
-                                                    {{ page_title }}
-                                                </button>
-                                                <button class="btn dropdown-toggle" data-toggle="dropdown" disabled="disabled">
-                                                    <span class="caret"></span>
-                                                </button>
+                                    <div id="jobList">
+                                    {% if job_count == 0 %}
+                                        <div class="row">
+                                            <div class="span8 alert alert-block" style="margin-left: 120px">
+                                                <h4>注意!</h4>
+                                                还未添加任何工作经历
+                                                    <br />
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1), 添加： 逐条添加，每一次只能生成一条工作经历信息；
+                                            </div>
+                                            <div class="span8" style="margin-left: 120px">
+                                                <a class="btn btn-primary btn-small job_edit" href="#" data-form="/information/personal/{{ form.id }}/job/add/">添加</a>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="control-group">
-                                        <div class="controls">
-                                            <button type="button" id="btnSave" class="btn btn-primary default_button">保存</button>
-{#                                          <button type="button" id="btnReturn" class="btn">返回</button>#}
+                                    {% else %}
+                                        <div class="row">
+                                            <div class="span4" style="margin-left: 120px">
+                                                <div class="btn-toolbar">
+                                                    <div class="btn-group">
+                                                        <a class="btn" id="btnNew" data-toggle="dropdown" href="#"><i class="icon-plus"></i></a>
+                                                        <ul class="dropdown-menu">
+                                                            <li><a class="job_edit" href="#" data-form="/information/personal/{{ form.id }}/job/add/">添加</a></li>
+                                                        </ul>
+                                                        <a class="btn disabled" id="btnDelete"><i class="icon-trash"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="span4" style="text-align: right;padding-top: 20px;">
+                                                <span class="label">共{{ job_count }}条信息</span>
+                                            </div>
                                         </div>
+                                        <div class="row">
+                                            <div class="span8" style="margin-left: 120px">
+                                                <div class="search_result_list">
+                                                    <table class="table table-bordered table-hover">
+                                                        <thead>
+                                                        <tr>
+                                                            <th class="check_column" style="vertical-align:middle"><input type="checkbox" id="checkSelectAll"/></th>
+                                                            <th style="vertical-align:middle">开始时间</th>
+                                                            <th style="vertical-align:middle">结束时间</th>
+                                                            <th style="vertical-align:middle">公司名称</th>
+                                                            <th style="vertical-align:middle">职位</th>
+{#                                                            <th style="vertical-align:middle">所在地</th>#}
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% for job in job_list %}
+                                                            <tr>
+                                                                <td class="cell_center"><input type="checkbox" class="list_selector" pk="{{ job.id }}"/></td>
+                                                                <td class="cell_right">{{ job.start_date|format_date }}</td>
+                                                                <td class="cell_right">{{ job.end_date|format_date }}</td>
+                                                                <td class="cell_center">
+                                                                    <a class="btn-link job_edit" href="#" data-form="/information/personal/{{ form.id }}/job/edit/{{ job.id }}/">{{ job.company }}</a>
+                                                                </td>
+                                                                <td class="cell_center">{{ job.position }}</td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
                                     </div>
-                                    </form>
+                                </div>
+
+                                <div class="tab-pane fade " id="tab_education">
+                                </div>
+
+                                <div class="tab-pane fade " id="tab_family">
                                 </div>
 
                             </div>
@@ -138,6 +184,6 @@
 {#                {% endif %}#}
             </div>
         </div>
-        <div class="modal hide fade" id="goodsFormModal"></div>
+        <div class="modal hide fade" id="jobFormModal"></div>
     </div>
 {% endblock %}

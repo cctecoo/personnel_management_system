@@ -7,7 +7,7 @@ define([
     'backbone',
     'datepicker',
     'datetimepicker'
-], function (require, $, Backbone, ZeroClipboard) {
+], function (require, $, Backbone) {
     "use strict";
 
     return Backbone.View.extend({
@@ -18,25 +18,25 @@ define([
             'click .dropdownItem': 'dropdownItem_click',
             //'click #btnReturn': 'return_to_prev_page',
             'click #btnSave': 'save_click',
-            'click .goods_edit': 'onGoodsEditClicked',
-            'click .btn-goods-edit': 'onGoodsEditEnterClicked',
+            'click .job_edit': 'onJobEditClicked',
+            'click .btn-job-edit': 'onJobEditEnterClicked',
             'click #checkSelectAll':'selectAll',
             'change .list_selector':'selectorChanged',
             'click #btnDelete':'remove_click' //删除
         },
 
         initialize:function() {
-            $('#id_start_date').datepicker().on('changeDate', function(event) {
-                $(event.target).datepicker('hide');
-            });
-            $('#id_end_date').datepicker().on('changeDate', function(event) {
-                $(event.target).datepicker('hide');
-            });
-            $('.goods_match').datetimepicker({
-                format: 'yyyy-MM-dd hh:mm',
-                pickSeconds: false,
-                language: 'zh-CN'
-            });
+            //$('#id_start_date').datepicker().on('changeDate', function(event) {
+            //    $(event.target).datepicker('hide');
+            //});
+            //$('#id_end_date').datepicker().on('changeDate', function(event) {
+            //    $(event.target).datepicker('hide');
+            //});
+            //$('.goods_match').datetimepicker({
+            //    format: 'yyyy-MM-dd hh:mm',
+            //    pickSeconds: false,
+            //    language: 'zh-CN'
+            //});
 
             $('#btnSave').popover({
                 placement: "top",
@@ -51,7 +51,7 @@ define([
             });
         },
 
-        onGoodsEditClicked: function(event) {
+        onJobEditClicked: function(event) {
             event.preventDefault(); // prevent navigation
             //防止两重提交
             if (this.in_syncing) {
@@ -68,14 +68,17 @@ define([
                     if (data.error_code > 0) {
                         window.alert(data.error_msg);
                     }else {
-                        var goodsForm = $("#frmEditGoods", data);
-                        $('#goodsFormModal').html(goodsForm);
-                        $('.goods_match').datetimepicker({
-                            format: 'yyyy-MM-dd hh:mm',
-                            pickSeconds: false,
+                        var jobForm = $("#frmEditJob", data);
+                        $('#jobFormModal').html(jobForm);
+                        $('.job_start_date').datepicker({
+                            format: 'yyyy-mm-dd',
                             language: 'zh-CN'
                         });
-                        $("#goodsFormModal").modal('show');
+                        $('.job_end_date').datepicker({
+                            format: 'yyyy-mm-dd',
+                            language: 'zh-CN'
+                        });
+                        $("#jobFormModal").modal('show');
                     }
                 },
                 error: function(){
@@ -91,7 +94,7 @@ define([
             return false; // prevent the click propagation
         },
 
-        onGoodsEditEnterClicked: function(){
+        onJobEditEnterClicked: function(){
             event.preventDefault(); // prevent navigation
             //防止两重提交
             if (this.in_syncing) {
@@ -100,7 +103,7 @@ define([
             var current_view = this;
             this.in_syncing = true;
             this.options.parentView.trigger('start_ajax_sync');
-            var form = $('#frmEditGoods');
+            var form = $('#frmEditJob');
             $.ajax({
                 type: "POST",
                 url: form.attr('action'),
@@ -109,11 +112,11 @@ define([
                     if (data.error_code > 0) {
                         window.alert(data.error_msg);
                     }else {
-                        var goodsForm = $("#frmEditGoods", data);
-                        $('#goodsFormModal').html(goodsForm);
-                        var validation = $('#id_validation').val();
+                        var jobForm = $("#frmEditJob", data);
+                        $('#jobFormModal').html(jobForm);
+                        var validation = $('#id_job_validation').val();
                         if (validation === "True") {
-                            var url = "/activity/" + $('#pk').val() + "/goods/list/";
+                            var url = "/information/personal/" + $('#pk').val() + "/job/list/";
                             $.ajax({
                                 type: "GET",
                                 url: url,
@@ -121,7 +124,7 @@ define([
                                     if (data.error_code > 0) {
                                         window.alert(data.error_msg);
                                     }else {
-                                        $('#goodsList').html(data);
+                                        $('#jobList').html(data);
                                         $('.tip').tooltip();
                                     }
                                 },
@@ -129,12 +132,15 @@ define([
                                     window.alert('与服务器通讯发生错误，请稍后重试。');
                                 }
                             });
-                            $("#goodsFormModal").modal('hide');
+                            $("#jobFormModal").modal('hide');
                         }else {
-                            $('.goods_match').datetimepicker({
-                                format: 'yyyy-MM-dd hh:mm',
-                                pickSeconds: false,
-                                language: 'zh-CN'
+                            $('.job_start_date').datepicker({
+                            format: 'yyyy-mm-dd',
+                            language: 'zh-CN'
+                            });
+                            $('.job_end_date').datepicker({
+                            format: 'yyyy-mm-dd',
+                            language: 'zh-CN'
                             });
                         }
                     }

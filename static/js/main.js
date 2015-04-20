@@ -16,6 +16,14 @@ require.config({
         'datepicker': {
             deps: ['bootstrap', 'jquery'],
             exports: 'datepicker'
+        },
+        'datetimepicker': {
+            deps: ['bootstrap', 'jquery'],
+            exports: 'datetimepicker'
+        },
+        'editable': {
+            deps: ['bootstrap', 'jquery'],
+            exports: 'editable'
         }
     },
     paths: {
@@ -23,7 +31,8 @@ require.config({
         backbone: 'lib/backbone-min',
         bootstrap: 'lib/bootstrap-min',
         datepicker: 'lib/bootstrap-datepicker',
-        datetimepicker: 'lib/bootstrap-datetimepicker'
+        datetimepicker: 'lib/bootstrap-datetimepicker',
+        editable: 'lib/bootstrap-editable'
     }
 });
 
