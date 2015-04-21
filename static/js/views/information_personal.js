@@ -19,31 +19,21 @@ define([
             //'click #btnReturn': 'return_to_prev_page',
             'click #btnSave': 'save_click',
             'click .job_edit': 'onJobEditClicked',
-            'click .btn-job-edit': 'onJobEditEnterClicked',
+            'click .btn-job-edit': 'onJobEditEnterClicked',  //job
+            'click .education_edit': 'onEducationEditClicked',
+            'click .btn-education-edit': 'onEducationEditEnterClicked',  //education
             'click #checkSelectAll':'selectAll',
             'change .list_selector':'selectorChanged',
             'click #btnDelete':'remove_click' //删除
         },
 
         initialize:function() {
-            //$('#id_start_date').datepicker().on('changeDate', function(event) {
-            //    $(event.target).datepicker('hide');
-            //});
-            //$('#id_end_date').datepicker().on('changeDate', function(event) {
-            //    $(event.target).datepicker('hide');
-            //});
-            //$('.goods_match').datetimepicker({
-            //    format: 'yyyy-MM-dd hh:mm',
-            //    pickSeconds: false,
-            //    language: 'zh-CN'
-            //});
-
             $('#btnSave').popover({
                 placement: "top",
                 trigger: "hover",
                 title: "提示",
                 delay: {show:1000, hide:100},
-                content: "保存活动信息的修改。"
+                content: "保存个人信息的修改。"
             });
 
             $(document).ready(function() {
@@ -158,16 +148,115 @@ define([
             return false; // avoid to execute the actual submit of the form.
         },
 
+        onEducationEditClicked: function(event) {
+            event.preventDefault(); // prevent navigation
+            //防止两重提交
+            if (this.in_syncing) {
+                return;
+            }
+            var current_view = this;
+            this.in_syncing = true;
+            this.options.parentView.trigger('start_ajax_sync');
+            var url = $(event.target).data("form"); // get the contact form url
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: function(data){
+                    if (data.error_code > 0) {
+                        window.alert(data.error_msg);
+                    }else {
+                        var educationForm = $("#frmEditEducation", data);
+                        $('#educationFormModal').html(educationForm);
+                        $('.education_start_date').datepicker({
+                            format: 'yyyy-mm-dd',
+                            language: 'zh-CN'
+                        });
+                        $('.education_end_date').datepicker({
+                            format: 'yyyy-mm-dd',
+                            language: 'zh-CN'
+                        });
+                        $("#educationFormModal").modal('show');
+                    }
+                },
+                error: function(){
+                    window.alert('与服务器通讯发生错误，请稍后重试。');
+                },
+                complete: function(){
+                    //防止两重提交
+                    //恢复现场
+                    current_view.options.parentView.trigger('finish_ajax_sync');
+                    current_view.in_syncing = false;
+                }
+            });
+            return false; // prevent the click propagation
+        },
+
+        onEducationEditEnterClicked: function(){
+            event.preventDefault(); // prevent navigation
+            //防止两重提交
+            if (this.in_syncing) {
+                return;
+            }
+            var current_view = this;
+            this.in_syncing = true;
+            this.options.parentView.trigger('start_ajax_sync');
+            var form = $('#frmEditEducation');
+            $.ajax({
+                type: "POST",
+                url: form.attr('action'),
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data) {
+                    if (data.error_code > 0) {
+                        window.alert(data.error_msg);
+                    }else {
+                        var educationForm = $("#frmEditEducation", data);
+                        $('#educationFormModal').html(educationForm);
+                        var validation = $('#id_education_validation').val();
+                        if (validation === "True") {
+                            var url = "/information/personal/" + $('#pk').val() + "/education/list/";
+                            $.ajax({
+                                type: "GET",
+                                url: url,
+                                success: function(data){
+                                    if (data.error_code > 0) {
+                                        window.alert(data.error_msg);
+                                    }else {
+                                        $('#educationList').html(data);
+                                        $('.tip').tooltip();
+                                    }
+                                },
+                                error: function(){
+                                    window.alert('与服务器通讯发生错误，请稍后重试。');
+                                }
+                            });
+                            $("#educationFormModal").modal('hide');
+                        }else {
+                            $('.education_start_date').datepicker({
+                                format: 'yyyy-mm-dd',
+                                language: 'zh-CN'
+                            });
+                            $('.education_end_date').datepicker({
+                                format: 'yyyy-mm-dd',
+                                language: 'zh-CN'
+                            });
+                        }
+                    }
+                },
+                error: function(){
+                    window.alert('与服务器通讯发生错误，请稍后重试。');
+                },
+                complete: function(){
+                    //防止两重提交
+                    //恢复现场
+                    current_view.options.parentView.trigger('finish_ajax_sync');
+                    current_view.in_syncing = false;
+                }
+            });
+            return false; // avoid to execute the actual submit of the form.
+        },
+
         // 保存
         save_click:function() {
-            //防止两重提交
-            //if (this.in_syncing) {
-            //    return;
-            //}
-            //this.in_syncing = true;
-            //$('#btnSave').prop('disabled', true);
-            //
-            //$('#frmEditInfo').submit();
             //防止两重提交
             if (this.in_syncing) {
                 return;
@@ -184,9 +273,6 @@ define([
                     if (data.error_code > 0) {
                         window.alert(data.error_msg);
                     }else {
-                        //var InfoForm = $("#frmEditInfo", data);
-                        //$('#ToInfoForm').html(InfoForm);
-                        //var validation = $('#id_validation').val();
                         var validation = data.validation;
                         if (validation === true) {
                             alert("编辑成功");

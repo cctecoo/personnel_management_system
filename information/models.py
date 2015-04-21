@@ -26,6 +26,22 @@ class Job(models.Model):
         db_table = "hr_manage_information_job"
 
 
+class Education(models.Model):
+    """
+    教育经历
+    """
+    start_date = models.DateField(u"开始日")  # 开始日
+    end_date = models.DateField(u"结束日")  # 结束日
+    school = models.CharField(u"学校名称", max_length=255)  # 学校名称
+    kind = models.CharField(u"种类", max_length=255)  # 种类
+    create_datetime = models.DateTimeField(auto_now_add=True)  # 创建日期
+    update_datetime = models.DateTimeField(auto_now=True)  # 更新日期
+    delete_flg = models.BooleanField(default=False)  # 删除标志位
+
+    class Meta:
+        db_table = "hr_manage_information_education"
+
+
 class Personal(models.Model):
     """
     个人信息
@@ -35,6 +51,8 @@ class Personal(models.Model):
     update_datetime = models.DateTimeField(auto_now=True)  # 更新日期
     job = models.ManyToManyField(Job, null=True, blank=True, related_name="personal_job",
                                  db_table="hr_manage_information_personal_job_relationships")  # 工作经历
+    education = models.ManyToManyField(Education, null=True, blank=True, related_name="personal_education",
+                                       db_table="hr_manage_information_personal_education_relationships")  # 教育经历
     delete_flg = models.BooleanField(default=False)  # 删除标志位
 
     class Meta:
@@ -75,3 +93,21 @@ class JobForm(ModelForm):
     class Meta:
         model = Job
         fields = ('start_date', 'end_date', 'company', 'position',)
+
+
+class EducationForm(ModelForm):
+    """
+    教育经历Form
+    """
+
+    def clean(self):
+        cleaned_data = super(EducationForm, self).clean()
+
+        return cleaned_data
+
+    def __init__(self, *args, **kwargs):
+        super(EducationForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        model = Education
+        fields = ('start_date', 'end_date', 'school', 'kind',)

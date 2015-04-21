@@ -11,7 +11,7 @@ from django.shortcuts import render_to_response, redirect, render, get_object_or
 from django.template import RequestContext
 
 from account.models import User, UserForm
-from information.models import Personal, PersonalForm, Job, JobForm
+from information.models import Personal, PersonalForm, Job, JobForm, EducationForm, Education
 from utility.exception import PermissionDeniedError
 from utility.role_manager import check_permission_allowed
 
@@ -36,6 +36,10 @@ def information_personal_view(request, id):
     job_count = personal.job.filter(delete_flg=False).count()
     job_list = personal.job.filter(delete_flg=False).order_by("start_date")
 
+    # 教育信息
+    education_count = personal.education.filter(delete_flg=False).count()
+    education_list = personal.education.filter(delete_flg=False).order_by("start_date")
+
     return render(request, "information/personal.html", {
         "id": id,
         "full_name": user.full_name,
@@ -43,6 +47,8 @@ def information_personal_view(request, id):
         "form": personal,
         "job_count": job_count,
         "job_list": job_list,
+        "education_count": education_count,
+        "education_list": education_list,
     })
 
 
@@ -58,24 +64,13 @@ def information_personal_edit_action(request, id):
     form = PersonalForm(request.POST, instance=queryset)
 
     if form.is_valid():
-
         form.instance.sex = request.POST['sex']
         form.save()
 
-        # return render_to_response("information/personal.html", {
-        #     'result': 'OK',
-        #     'validation': True,
-        #     'form': form,
-        # },  context_instance=RequestContext(request))
         response_data['validation'] = True
         return HttpResponse(json.dumps(response_data), mimetype="application/json")
 
     else:
-        # return render_to_response("information/personal.html", {
-        #     'result': 'OK',
-        #     'validation': False,
-        #     'form': form,
-        # },  context_instance=RequestContext(request))
         response_data['validation'] = False
         return HttpResponse(json.dumps(response_data), mimetype="application/json")
 
@@ -104,36 +99,20 @@ def job_edit_view(request, user_pk, job_id):
     """
     if not check_permission_allowed(request, user_pk):
         raise PermissionDeniedError
-    # response_data = {}
-
     # 个人信息id
     user_id = int(user_pk)
-    # 工作id
+    # 工作信息id
     job_id = int(job_id)
 
     # 取得个人信息
     queryset = Personal.objects.filter(belong_to__id=user_id, delete_flg=False)
-    # # 活动不存在，返回失败。
-    # if queryset.count() == 0:
-    #     response_data['result'] = 'fail'
-    #     response_data['error_code'] = JSON_ERROR_CODE_DATA_NOT_EXIST
-    #     response_data['error_msg'] = JSON_ERROR_MSG_ACTIVITY_NOT_EXIST
-    #     return HttpResponse(json.dumps(response_data), mimetype="application/json")
-    # # 活动存在，取得活动对象实例
     personal = queryset.get()
 
     # 取得工作信息
     queryset = personal.job.filter(id=job_id, delete_flg=False)
-    # # 商品不存在，返回失败。
-    # if queryset.count() == 0:
-    #     response_data['result'] = 'fail'
-    #     response_data['error_code'] = JSON_ERROR_CODE_DATA_NOT_EXIST
-    #     response_data['error_msg'] = JSON_ERROR_MSG_GOODS_NOT_EXIST
-    #     return HttpResponse(json.dumps(response_data), mimetype="application/json")
-    # # 商品存在，取得商品对象实例
     job = queryset.get()
 
-    # 取得工作的Form实例
+    # 生成工作信息对应的Form实例
     jobForm = JobForm(instance=job)
 
     return render_to_response("information/job_edit.html", {
@@ -150,48 +129,30 @@ def job_edit_action(request, user_pk):
     """
     if not check_permission_allowed(request, user_pk):
         raise PermissionDeniedError
-    # response_data = {}
-
     # 个人信息id
     user_id = int(user_pk)
 
-    # 取得请求的工作id
+    # 取得请求的工作信息id
     id = request.POST['id']
 
     if id == "":
-        # 取得工作信息
+        # 取得工作信息的Form实例
         form = JobForm(request.POST, instance=Job())
-
     else:
         # 取得工作信息
         queryset = Job.objects.filter(id__exact=int(id), delete_flg=False)
-        # # 不存在，返回失败。
-        # if queryset.count() == 0:
-        #     response_data['result'] = 'fail'
-        #     response_data['error_code'] = JSON_ERROR_CODE_DATA_NOT_EXIST
-        #     response_data['error_msg'] = JSON_ERROR_MSG_GOODS_NOT_EXIST
-        #     return HttpResponse(json.dumps(response_data), mimetype="application/json")
-        # # 商品存在，取得商品对象实例
         job = queryset.get()
-        # 生成工作实例对应的Form实例
+        # 生成工作信息对应的Form实例
         form = JobForm(request.POST, instance=job)
 
     if form.is_valid():
         if id == "":
-            # 取得人员信息
+            # 取得个人信息
             queryset = Personal.objects.filter(belong_to__id=user_id, delete_flg=False)
-            # # 活动不存在，返回失败。
-            # if queryset.count() == 0:
-            #     response_data['result'] = 'fail'
-            #     response_data['error_code'] = JSON_ERROR_CODE_DATA_NOT_EXIST
-            #     response_data['error_msg'] = JSON_ERROR_MSG_ACTIVITY_NOT_EXIST
-            #     return HttpResponse(json.dumps(response_data), mimetype="application/json")
-            # # 活动存在，取得活动对象实例
             personal = queryset.get()
-
             # 保存
             job = form.save()
-            # 在活动中保存商品
+            # 在个人信息中保存工作信息，既保存relationship
             personal.job.add(job)
 
         else:
@@ -221,19 +182,10 @@ def job_list_view(request, user_pk):
     """
     if not check_permission_allowed(request, user_pk):
         raise PermissionDeniedError
-    # response_data = {}
-
     # 个人信息id
     user_id = int(user_pk)
-    # 取得人员信息
+    # 取得个人信息
     queryset = Personal.objects.filter(belong_to__id=user_id, delete_flg=False)
-    # # 活动不存在，返回失败。
-    # if queryset.count() == 0:
-    #     response_data['result'] = 'fail'
-    #     response_data['error_code'] = JSON_ERROR_CODE_DATA_NOT_EXIST
-    #     response_data['error_msg'] = JSON_ERROR_MSG_ACTIVITY_NOT_EXIST
-    #     return HttpResponse(json.dumps(response_data), mimetype="application/json")
-    # # 活动存在，取得活动对象实例
     personal = queryset.get()
 
     # 工作信息
@@ -255,16 +207,8 @@ def job_delete_action(request, user_pk):
     """
     if not check_permission_allowed(request, user_pk):
         raise PermissionDeniedError
-    # response_data = {}
-
     # 个人信息id
     user_id = int(user_pk)
-
-    # if not 'goods_pks' in request.POST:
-    #     response_data['result'] = 'fail'
-    #     response_data['error_code'] = JSON_ERROR_CODE_DATA_NOT_MATCHED
-    #     response_data['error_msg'] = JSON_ERROR_MSG_DATA_NOT_MATCHED
-    #     return HttpResponse(json.dumps(response_data), mimetype="application/json")
 
     pks = []
     for key in request.POST["job_pks"].split(','):
@@ -272,22 +216,14 @@ def job_delete_action(request, user_pk):
         if key:
             pks.append(int(key))
 
-    # 取得工作
+    # 取得工作信息
     queryset = Job.objects.filter(id__in=pks, delete_flg=False)
 
-    # 将工作逻辑删除
+    # 将工作信息逻辑删除
     queryset.update(delete_flg=True, update_datetime=datetime.now())
 
-    # 取得人员信息
+    # 取得个人信息
     queryset = Personal.objects.filter(belong_to__id=user_id, delete_flg=False)
-
-    # # 活动不存在，返回失败。
-    # if queryset.count() == 0:
-    #     response_data['result'] = 'fail'
-    #     response_data['error_code'] = JSON_ERROR_CODE_DATA_NOT_EXIST
-    #     response_data['error_msg'] = JSON_ERROR_MSG_ACTIVITY_NOT_EXIST
-    #     return HttpResponse(json.dumps(response_data), mimetype="application/json")
-    # # 活动存在，取得活动对象实例
     personal = queryset.get()
 
     # 工作信息
@@ -299,4 +235,167 @@ def job_delete_action(request, user_pk):
         'user_pk': user_pk,
         'job_count': job_count,
         'job_list': job_list,
+    }, context_instance=RequestContext(request))
+
+
+@login_required
+def education_add_view(request, user_pk):
+    """
+    添加教育经历view
+    """
+    if not check_permission_allowed(request, user_pk):
+        raise PermissionDeniedError
+    # 生成教育经历Form对象实例
+    educationForm = EducationForm()
+
+    return render_to_response("information/education_edit.html", {
+        'result': 'OK',
+        'user_pk': user_pk,
+        'education': educationForm,
+    }, context_instance=RequestContext(request))
+
+
+@login_required
+def education_edit_view(request, user_pk, education_id):
+    """
+    编辑教育经历view
+    """
+    if not check_permission_allowed(request, user_pk):
+        raise PermissionDeniedError
+    # 个人信息id
+    user_id = int(user_pk)
+    # 教育信息id
+    education_id = int(education_id)
+
+    # 取得个人信息
+    queryset = Personal.objects.filter(belong_to__id=user_id, delete_flg=False)
+    personal = queryset.get()
+
+    # 取得教育信息
+    queryset = personal.education.filter(id=education_id, delete_flg=False)
+    education = queryset.get()
+
+    # 生成教育信息对应的Form实例
+    educationForm = EducationForm(instance=education)
+
+    return render_to_response("information/education_edit.html", {
+        'result': 'OK',
+        'user_pk': user_pk,
+        'education': educationForm,
+    }, context_instance=RequestContext(request))
+
+
+@login_required
+def education_edit_action(request, user_pk):
+    """
+    编辑教育action
+    """
+    if not check_permission_allowed(request, user_pk):
+        raise PermissionDeniedError
+    # 个人信息id
+    user_id = int(user_pk)
+
+    # 取得请求的教育信息id
+    id = request.POST['id']
+
+    if id == "":
+        # 取得教育信息的Form实例
+        form = EducationForm(request.POST, instance=Education())
+    else:
+        # 取得教育信息
+        queryset = Education.objects.filter(id__exact=int(id), delete_flg=False)
+        education = queryset.get()
+        # 生成教育信息对应的Form实例
+        form = EducationForm(request.POST, instance=education)
+
+    if form.is_valid():
+        if id == "":
+            # 取得个人信息
+            queryset = Personal.objects.filter(belong_to__id=user_id, delete_flg=False)
+            personal = queryset.get()
+            # 保存
+            education = form.save()
+            # 在个人信息中保存教育信息，既保存relationship
+            personal.education.add(education)
+
+        else:
+            # 保存
+            form.save()
+
+        return render_to_response("information/education_edit.html", {
+            'result': 'OK',
+            'education_validation': True,
+            'user_pk': user_pk,
+            'education': form,
+        }, context_instance=RequestContext(request))
+
+    else:
+        return render_to_response("information/education_edit.html", {
+            'result': 'OK',
+            'education_validation': False,
+            'user_pk': user_pk,
+            'education': form,
+        }, context_instance=RequestContext(request))
+
+
+@login_required
+def education_list_view(request, user_pk):
+    """
+    教育经历一览View
+    """
+    if not check_permission_allowed(request, user_pk):
+        raise PermissionDeniedError
+    # 个人信息id
+    user_id = int(user_pk)
+    # 取得个人信息
+    queryset = Personal.objects.filter(belong_to__id=user_id, delete_flg=False)
+    personal = queryset.get()
+
+    # 教育信息
+    education_count = personal.education.filter(delete_flg=False).count()
+    education_list = personal.education.filter(delete_flg=False).order_by("start_date")
+
+    return render_to_response("information/education_list.html", {
+        'result': 'OK',
+        'user_pk': user_pk,
+        'education_count': education_count,
+        'education_list': education_list,
+    }, context_instance=RequestContext(request))
+
+
+@login_required
+def education_delete_action(request, user_pk):
+    """
+    删除教育经历action
+    """
+    if not check_permission_allowed(request, user_pk):
+        raise PermissionDeniedError
+    # 个人信息id
+    user_id = int(user_pk)
+
+    pks = []
+    for key in request.POST["education_pks"].split(','):
+        # if key and is_int(key):
+        if key:
+            pks.append(int(key))
+
+    # 取得教育经历信息
+    queryset = Education.objects.filter(id__in=pks, delete_flg=False)
+
+    # 将教育经历信息逻辑删除
+    queryset.update(delete_flg=True, update_datetime=datetime.now())
+
+    # 取得个人信息
+    queryset = Personal.objects.filter(belong_to__id=user_id, delete_flg=False)
+    personal = queryset.get()
+
+    # 教育信息
+    education_count = personal.education.filter(delete_flg=False).count()
+    education_list = personal.education.filter(delete_flg=False).order_by("start_date")
+
+    return render_to_response("information/education_list.html", {
+        'result': 'OK',
+        'user_pk': user_pk,
+        'education_count': education_count,
+        'education_list': education_list,
     }, context_instance=RequestContext(request))
