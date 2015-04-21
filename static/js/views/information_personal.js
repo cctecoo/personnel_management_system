@@ -26,24 +26,12 @@ define([
         },
 
         initialize:function() {
-            //$('#id_start_date').datepicker().on('changeDate', function(event) {
-            //    $(event.target).datepicker('hide');
-            //});
-            //$('#id_end_date').datepicker().on('changeDate', function(event) {
-            //    $(event.target).datepicker('hide');
-            //});
-            //$('.goods_match').datetimepicker({
-            //    format: 'yyyy-MM-dd hh:mm',
-            //    pickSeconds: false,
-            //    language: 'zh-CN'
-            //});
-
             $('#btnSave').popover({
                 placement: "top",
                 trigger: "hover",
                 title: "提示",
                 delay: {show:1000, hide:100},
-                content: "保存活动信息的修改。"
+                content: "保存个人信息的修改。"
             });
 
             $(document).ready(function() {
@@ -161,14 +149,6 @@ define([
         // 保存
         save_click:function() {
             //防止两重提交
-            //if (this.in_syncing) {
-            //    return;
-            //}
-            //this.in_syncing = true;
-            //$('#btnSave').prop('disabled', true);
-            //
-            //$('#frmEditInfo').submit();
-            //防止两重提交
             if (this.in_syncing) {
                 return;
             }
@@ -184,9 +164,6 @@ define([
                     if (data.error_code > 0) {
                         window.alert(data.error_msg);
                     }else {
-                        //var InfoForm = $("#frmEditInfo", data);
-                        //$('#ToInfoForm').html(InfoForm);
-                        //var validation = $('#id_validation').val();
                         var validation = data.validation;
                         if (validation === true) {
                             alert("编辑成功");
