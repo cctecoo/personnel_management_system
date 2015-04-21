@@ -308,19 +308,23 @@ define([
 
 
         // 删除数据
-        remove_click:function () {
+        remove_click:function (event) {
             // 删除确认对话框
-            if (!window.confirm("警告，请确认是否要删除选中的商品？")) {
+            if (!window.confirm("警告，请确认是否要删除选中的信息？")) {
                 return;
             }
+            var element = $(event.target);
+            var tab = "#" + element.parents('.tab-pane').attr('id');
+            var name = tab.split('_');
+            //console.log(name[1]);
 
-            $('#btnDelete').addClass('disabled');
+            $(tab+' #btnDelete').addClass('disabled');
 
             var pks = '';
-            $('.list_selector:checked').each(function (index, value) {
+            $(tab+' .list_selector:checked').each(function (index, value) {
                 pks = pks + $(value).attr('pk') + ',';
             });
-            $('#id_job_pks').val(pks);
+            $('#id_'+name[1]+'_pks').val(pks);
 
             event.preventDefault(); // prevent navigation
             //防止两重提交
@@ -330,7 +334,7 @@ define([
             var current_view = this;
             this.in_syncing = true;
             this.options.parentView.trigger('start_ajax_sync');
-            var form = $('#frmJobList');
+            var form = $('#frm_'+name[1]+'List');
             $.ajax({
                 type: "POST",
                 url: form.attr('action'),
@@ -339,8 +343,8 @@ define([
                     if (data.error_code > 0) {
                         window.alert(data.error_msg);
                     }else {
-                        $('#jobList').html(data);
-                        $('#id_job_pks').val('');
+                        $('#'+name[1]+'List').html(data);
+                        $('#id_'+name[1]+'_pks').val('');
                         $('.tip').tooltip();
                     }
                 },
@@ -354,31 +358,37 @@ define([
                     current_view.in_syncing = false;
                 }
             });
-            $('#btnDelete').removeClass('disabled');
+            $(tab+' #btnDelete').removeClass('disabled');
             return false; // avoid to execute the actual submit of the form.
         },
 
         // 选中全部
-        selectAll:function () {
-            $('.list_selector').prop('checked', $('#checkSelectAll').prop('checked'));
-            this.toggleCommandButtonStatus();
+        selectAll:function (event) {
+            var element = $(event.target);
+            var tab = "#" + element.parents('.tab-pane').attr('id');
+
+            $(tab+' .list_selector').prop('checked', $(tab+' #checkSelectAll').prop('checked'));
+            this.toggleCommandButtonStatus(tab);
         },
 
         // 选择框变更状态
-        selectorChanged:function () {
-            this.toggleCommandButtonStatus();
-            $('#checkSelectAll').prop('checked', $('.list_selector').length === $('.list_selector:checked').length);
+        selectorChanged:function (event) {
+            var element = $(event.target);
+            var tab = "#" + element.parents('.tab-pane').attr('id');
+
+            this.toggleCommandButtonStatus(tab);
+            $(tab+' #checkSelectAll').prop('checked', $(tab+' .list_selector').length === $(tab+' .list_selector:checked').length);
         },
 
         // 一览前置选择框状态变化使用
-        toggleCommandButtonStatus:function () {
-            if ($('#btnDelete')) {
-                var selectedNumToBeDeleted = $('.list_selector:checked').length;
-                $('#btnDelete').prop('disabled', selectedNumToBeDeleted === 0);
+        toggleCommandButtonStatus:function (tab) {
+            if ($(tab+' #btnDelete')) {
+                var selectedNumToBeDeleted = $(tab+' .list_selector:checked').length;
+                $(tab+' #btnDelete').prop('disabled', selectedNumToBeDeleted === 0);
                 if (selectedNumToBeDeleted !== 0) {
-                    $('#btnDelete').removeClass('disabled');
+                    $(tab+' #btnDelete').removeClass('disabled');
                 } else {
-                    $('#btnDelete').addClass('disabled');
+                    $(tab+' #btnDelete').addClass('disabled');
                 }
             }
         }
