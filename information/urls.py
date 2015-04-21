@@ -17,6 +17,14 @@ urlpatterns = patterns('information.views',
     url(r'^personal/(\d+)/job/delete/action/$', 'job_delete_action'),  # 工作删除action
     # 工作经历 end
 
+    # 教育经历 start
+    url(r'^personal/(\d+)/education/list/$', 'education_list_view'),  # 教育一览view
+    url(r'^personal/(\d+)/education/edit/(\d+)/$', 'education_edit_view'),  # 教育经历编辑view
+    url(r'^personal/(\d+)/education/edit/action/$', 'education_edit_action'),  # 教育经历编辑action
+    url(r'^personal/(\d+)/education/add/$', 'education_add_view'),  # 教育经历添加view
+    url(r'^personal/(\d+)/education/delete/action/$', 'education_delete_action'),  # 教育经历删除action
+    # 教育经历 end
+
     # url(r'^contacts/$', 'information_contacts_view'),
 
     )

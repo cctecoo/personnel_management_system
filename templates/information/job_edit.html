@@ -8,11 +8,11 @@
         <input type="hidden" name="job_validation" id="id_job_validation" value="{{ job_validation }}">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3>编辑工作</h3>
+            <h3>编辑工作经历</h3>
         </div>
         <div class="modal-body">
             {% if job.non_field_errors %}
-                {% with goods.non_field_errors|first as error %}
+                {% with job.non_field_errors|first as error %}
                     <div class="control-group">
                         <div class="controls"><span class="error_message">{{ error }}</span></div>
                     </div>
