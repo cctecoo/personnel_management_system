@@ -236,11 +236,11 @@
         <div class="modal hide fade" id="jobFormModal"></div>
         <div class="modal hide fade" id="educationFormModal"></div>
     </div>
-    <form action="/information/personal/{{ id }}/job/delete/action/" method="post" id="frmJobList">
+    <form action="/information/personal/{{ id }}/job/delete/action/" method="post" id="frm_jobList">
         {% csrf_token %}
         <input type="hidden" name="job_pks" id="id_job_pks" value=""/>
     </form>
-    <form action="/information/personal/{{ id }}/education/delete/action/" method="post" id="frmEducationList">
+    <form action="/information/personal/{{ id }}/education/delete/action/" method="post" id="frm_educationList">
         {% csrf_token %}
         <input type="hidden" name="education_pks" id="id_education_pks" value=""/>
     </form>
