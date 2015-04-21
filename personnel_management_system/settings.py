@@ -170,7 +170,7 @@ LOGGING = {
 
 LOGIN_URL = '/account/login/'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-DATE_INPUT_FORMATS = ('%Y/%m/%d', '%Y/%m/%d %H:%M:%S')
+DATE_INPUT_FORMATS = ('%Y/%m/%d', '%Y-%m-%d', )
 DATE_FORMAT = 'Y/m/d'
-DATETIME_INPUT_FORMATS = ('%Y-%m-%d %H:%M',)
+DATETIME_INPUT_FORMATS = ('%Y/%m/%d %H:%M', '%Y/%m/%d %H:%M:%S', '%Y-%m-%d %H:%M', '%Y-%m-%d %H:%M:%S')
 DATETIME_FORMAT = 'Y-m-d hh:mm'

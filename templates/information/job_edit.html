@@ -1,0 +1,86 @@
+{% load extfilters %}
+{#{% load humanize %}#}
+<div class="modal hide fade" id="job_edit">
+    <form class="form-horizontal" action="/information/personal/{{ user_pk }}/job/edit/action/" id="frmEditJob" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="user_pk" id="id_user_pk" value="{{ user_pk|default_if_none:"" }}"/>
+        <input type="hidden" name="id" id="pk" value="{{ job.instance.id|default_if_none:"" }}"/>
+        <input type="hidden" name="job_validation" id="id_job_validation" value="{{ job_validation }}">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3>编辑工作</h3>
+        </div>
+        <div class="modal-body">
+            {% if job.non_field_errors %}
+                {% with goods.non_field_errors|first as error %}
+                    <div class="control-group">
+                        <div class="controls"><span class="error_message">{{ error }}</span></div>
+                    </div>
+                {% endwith %}
+            {% endif %}
+            <div class="control-group">
+                <label class="control-label" for="id_start_date">开始时间</label>
+                <div class="controls">
+                    <div class="input-append date job_start_date" data-date="{{ job.start_date.value|default_if_none:""|format_date }}" data-date-format="yyyy-mm-dd">
+                        <input type="text" class="span2 {% if job.start_date.errors %} error_flg{% endif %}"
+                               id="id_start_date" name="start_date" value="{{ job.start_date.value|default_if_none:""|format_date }}" readonly/>
+                        <span class="add-on"><i class="icon-th"></i></span>
+                    </div>
+                    {% if job.start_date.errors %}
+                        {% with job.start_date.errors|first as error %}
+                            <br/>
+                            <span class="error_message">{{ error }}</span>
+                        {% endwith %}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="id_end_date">结束时间</label>
+                <div class="controls">
+                    <div class="input-append date job_end_date" data-date="{{ job.end_date.value|default_if_none:""|format_date }}" data-date-format="yyyy-mm-dd">
+                        <input type="text" class="span2 {% if job.end_date.errors %} error_flg{% endif %}"
+                               id="id_end_date" name="end_date" value="{{ job.end_date.value|default_if_none:""|format_date }}" readonly/>
+                        <span class="add-on"><i class="icon-th"></i></span>
+                    </div>
+                    {% if job.end_date.errors %}
+                        {% with job.end_date.errors|first as error %}
+                            <br/>
+                            <span class="error_message">{{ error }}</span>
+                        {% endwith %}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="id_company">公司名称</label>
+                <div class="controls">
+                    <input type="text" class="span2 {% if job.company.errors %} error_flg{% endif %}" maxlength="30"
+                           id="id_company" name="company" value="{{ job.company.value|default_if_none:"" }}"/>
+                    {% if job.company.errors %}
+                        {% with job.company.errors|first as error %}
+                            <br/>
+                            <span class="error_message">{{ error }}</span>
+                        {% endwith %}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="id_position">职位</label>
+                <div class="controls">
+                    <input type="text" class="span2 {% if job.position.errors %} error_flg{% endif %}" maxlength="30"
+                           id="id_position" name="position" value="{{ job.position.value|default_if_none:"" }}"/>
+                    {% if job.position.errors %}
+                        {% with job.position.errors|first as error %}
+                            <br/>
+                            <span class="error_message">{{ error }}</span>
+                        {% endwith %}
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn" data-dismiss="modal" >关闭</button>
+            <button type="button" class="btn btn-primary btn-job-edit">保存</button>
+        </div>
+    </form>
+</div>

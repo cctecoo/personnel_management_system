@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 __author__ = 'cc'
-from datetime import date
+from datetime import date, datetime
 
 from django import template
 from django.db import connection
@@ -47,6 +47,14 @@ def get_sex_name(value):
 @register.filter(name='format_date')
 def format_date(value):
     if isinstance(value, date):
-        return value.strftime(settings.DATE_INPUT_FORMATS[1])
+        return value.strftime(settings.DATE_INPUT_FORMATS[0])
+    else:
+        return value
+
+
+@register.filter(name='format_datetime')
+def format_datetime(value):
+    if isinstance(value, datetime):
+        return value.strftime(settings.DATETIME_INPUT_FORMATS[1])
     else:
         return value
