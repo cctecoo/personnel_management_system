@@ -110,7 +110,7 @@
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1), 添加： 逐条添加，每一次只能生成一条工作经历信息；
                                             </div>
                                             <div class="span8" style="margin-left: 120px">
-                                                <a class="btn btn-primary btn-small job_edit" href="#" data-form="/information/personal/{{ form.id }}/job/add/">添加</a>
+                                                <a class="btn btn-primary btn-small job_edit" href="#" data-form="/information/personal/{{ id }}/job/add/">添加</a>
                                             </div>
                                         </div>
                                     {% else %}
@@ -120,7 +120,7 @@
                                                     <div class="btn-group">
                                                         <a class="btn" id="btnNew" data-toggle="dropdown" href="#"><i class="icon-plus"></i></a>
                                                         <ul class="dropdown-menu">
-                                                            <li><a class="job_edit" href="#" data-form="/information/personal/{{ form.id }}/job/add/">添加</a></li>
+                                                            <li><a class="job_edit" href="#" data-form="/information/personal/{{ id }}/job/add/">添加</a></li>
                                                         </ul>
                                                         <a class="btn disabled" id="btnDelete"><i class="icon-trash"></i></a>
                                                     </div>
@@ -151,7 +151,7 @@
                                                                 <td class="cell_right">{{ job.start_date|format_date }}</td>
                                                                 <td class="cell_right">{{ job.end_date|format_date }}</td>
                                                                 <td class="cell_center">
-                                                                    <a class="btn-link job_edit" href="#" data-form="/information/personal/{{ form.id }}/job/edit/{{ job.id }}/">{{ job.company }}</a>
+                                                                    <a class="btn-link job_edit" href="#" data-form="/information/personal/{{ id }}/job/edit/{{ job.id }}/">{{ job.company }}</a>
                                                                 </td>
                                                                 <td class="cell_center">{{ job.position }}</td>
                                                             </tr>
@@ -186,4 +186,8 @@
         </div>
         <div class="modal hide fade" id="jobFormModal"></div>
     </div>
+    <form action="/information/personal/{{ id }}/job/delete/action/" method="post" id="frmJobList">
+        {% csrf_token %}
+        <input type="hidden" name="job_pks" id="id_job_pks" value=""/>
+    </form>
 {% endblock %}

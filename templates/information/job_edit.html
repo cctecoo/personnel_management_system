@@ -1,10 +1,10 @@
 {% load extfilters %}
 {#{% load humanize %}#}
 <div class="modal hide fade" id="job_edit">
-    <form class="form-horizontal" action="/information/personal/{{ personal_pk }}/job/edit/action/" id="frmEditJob" method="post">
+    <form class="form-horizontal" action="/information/personal/{{ user_pk }}/job/edit/action/" id="frmEditJob" method="post">
         {% csrf_token %}
-        <input type="hidden" name="personal_pk" id="id_personal_pk" value="{{ personal_pk|default_if_none:"" }}"/>
-        <input type="hidden" name="id" id="pk" value="{{ job.id|default_if_none:"" }}"/>
+        <input type="hidden" name="user_pk" id="id_user_pk" value="{{ user_pk|default_if_none:"" }}"/>
+        <input type="hidden" name="id" id="pk" value="{{ job.instance.id|default_if_none:"" }}"/>
         <input type="hidden" name="job_validation" id="id_job_validation" value="{{ job_validation }}">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>

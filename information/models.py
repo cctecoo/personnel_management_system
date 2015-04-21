@@ -16,8 +16,8 @@ class Job(models.Model):
     """
     start_date = models.DateField(u"开始日")  # 工作开始日
     end_date = models.DateField(u"结束日")  # 工作结束日
-    company = models.CharField(u"公司名称", max_length=255, blank=True, null=True)  # 公司名称
-    position = models.CharField(u"职位", max_length=255, blank=True, null=True)  # 职位
+    company = models.CharField(u"公司名称", max_length=255)  # 公司名称
+    position = models.CharField(u"职位", max_length=255)  # 职位
     create_datetime = models.DateTimeField(auto_now_add=True)  # 创建日期
     update_datetime = models.DateTimeField(auto_now=True)  # 更新日期
     delete_flg = models.BooleanField(default=False)  # 删除标志位

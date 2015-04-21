@@ -9,7 +9,7 @@
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1), 添加： 逐条添加，每一次只能生成一条工作经历信息；
         </div>
         <div class="span8" style="margin-left: 120px">
-            <a class="btn btn-primary btn-small job_edit" href="#" data-form="/information/personal/{{ personal_pk }}/job/add/">添加</a>
+            <a class="btn btn-primary btn-small job_edit" href="#" data-form="/information/personal/{{ user_pk }}/job/add/">添加</a>
         </div>
     </div>
 {% else %}
@@ -19,7 +19,7 @@
                 <div class="btn-group">
                     <a class="btn" id="btnNew" data-toggle="dropdown" href="#"><i class="icon-plus"></i></a>
                     <ul class="dropdown-menu">
-                        <li><a class="job_edit" href="#" data-form="/information/personal/{{ personal_pk }}/job/add/">添加</a></li>
+                        <li><a class="job_edit" href="#" data-form="/information/personal/{{ user_pk }}/job/add/">添加</a></li>
                     </ul>
                     <a class="btn disabled" id="btnDelete"><i class="icon-trash"></i></a>
                 </div>
@@ -47,10 +47,10 @@
                     {% for job in job_list %}
                         <tr>
                             <td class="cell_center"><input type="checkbox" class="list_selector" pk="{{ job.id }}"/></td>
-                            <td class="cell_right">{{ job.start_date|format_date }}</td>
-                            <td class="cell_right">{{ job.end_date|format_date }}</td>
+                            <td class="cell_center">{{ job.start_date|format_date }}</td>
+                            <td class="cell_center">{{ job.end_date|format_date }}</td>
                             <td class="cell_center">
-                                <a class="btn-link job_edit" href="#" data-form="/information/personal/{{ personal_pk }}/job/edit/{{ job.id }}/">{{ job.company }}</a>
+                                <a class="btn-link job_edit" href="#" data-form="/information/personal/{{ user_pk }}/job/edit/{{ job.id }}/">{{ job.company }}</a>
                             </td>
                             <td class="cell_center">{{ job.position }}</td>
                         </tr>
@@ -60,4 +60,5 @@
             </div>
         </div>
     </div>
+</div>
 {% endif %}

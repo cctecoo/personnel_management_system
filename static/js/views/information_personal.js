@@ -135,12 +135,12 @@ define([
                             $("#jobFormModal").modal('hide');
                         }else {
                             $('.job_start_date').datepicker({
-                            format: 'yyyy-mm-dd',
-                            language: 'zh-CN'
+                                format: 'yyyy-mm-dd',
+                                language: 'zh-CN'
                             });
                             $('.job_end_date').datepicker({
-                            format: 'yyyy-mm-dd',
-                            language: 'zh-CN'
+                                format: 'yyyy-mm-dd',
+                                language: 'zh-CN'
                             });
                         }
                     }
@@ -234,7 +234,7 @@ define([
             $('.list_selector:checked').each(function (index, value) {
                 pks = pks + $(value).attr('pk') + ',';
             });
-            $('#id_goods_pks').val(pks);
+            $('#id_job_pks').val(pks);
 
             event.preventDefault(); // prevent navigation
             //防止两重提交
@@ -244,7 +244,7 @@ define([
             var current_view = this;
             this.in_syncing = true;
             this.options.parentView.trigger('start_ajax_sync');
-            var form = $('#frmGoodsList');
+            var form = $('#frmJobList');
             $.ajax({
                 type: "POST",
                 url: form.attr('action'),
@@ -253,8 +253,8 @@ define([
                     if (data.error_code > 0) {
                         window.alert(data.error_msg);
                     }else {
-                        $('#goodsList').html(data);
-                        $('#id_goods_pks').val('');
+                        $('#jobList').html(data);
+                        $('#id_job_pks').val('');
                         $('.tip').tooltip();
                     }
                 },

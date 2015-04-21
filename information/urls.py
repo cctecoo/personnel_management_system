@@ -11,10 +11,10 @@ urlpatterns = patterns('information.views',
 
     # 工作经历 start
     url(r'^personal/(\d+)/job/list/$', 'job_list_view'),  # 工作一览view
-    # url(r'^personal/(\d+)/job/edit/(\d+)/$', 'job_edit_view'),  # 工作编辑view
+    url(r'^personal/(\d+)/job/edit/(\d+)/$', 'job_edit_view'),  # 工作编辑view
     url(r'^personal/(\d+)/job/edit/action/$', 'job_edit_action'),  # 工作编辑action
     url(r'^personal/(\d+)/job/add/$', 'job_add_view'),  # 工作添加view
-    # url(r'personal/^(\d+)/goods/delete/action/$', 'goods_delete_action'),  # 工作删除action
+    url(r'^personal/(\d+)/job/delete/action/$', 'job_delete_action'),  # 工作删除action
     # 工作经历 end
 
     # url(r'^contacts/$', 'information_contacts_view'),
