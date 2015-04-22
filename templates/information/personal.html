@@ -96,10 +96,8 @@
                                         <div class="control-group">
                                             <label class="control-label" for="id_phone">手机号</label>
                                             <div class="controls">
-{#                                                <input type="text" class="span2 {% if form.phone.errors %} error_flg{% endif %}" maxlength="30"#}
-{#                                                       id="id_phone" name="phone" value="{{ form.phone|default_if_none:"" }}"/>#}
                                                 <input type="text" id="id_phone" name="phone" class="highlight "
-                                                       maxlength="30" disabled="disabled" value="{{ form.phone|default_if_none:"" }}"/>
+                                                       maxlength="30" value="{{ form.phone|default_if_none:"" }}"/>
                                                 {% if form.phone.errors %}
                                                     {% with form.phone.errors|first as error %}
                                                         <br/>
