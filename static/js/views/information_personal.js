@@ -37,6 +37,10 @@ define([
                 delay: {show:1000, hide:100},
                 content: "保存个人信息的修改。"
             });
+            $('.personal_birthday').datepicker({
+                format: 'yyyy-mm-dd',
+                language: 'zh-CN'
+            });
 
             $(document).ready(function() {
                 $('.tip').tooltip();
@@ -375,7 +379,7 @@ define([
                             //日期格式待完善
                             $('.tip').tooltip();
                         }else {
-                            alert("error");
+                            alert("error!请确认手机号全部为数字");
                         }
                     }
                 },

@@ -2,5 +2,17 @@
 # -*- coding: utf-8 -*-
 __author__ = 'cc'
 
+# 员工性别
 PERSONAL_SEX_MALE = 1  # 男
 PERSONAL_SEX_FEMALE = 2  # 女
+
+# 员工状态
+PERSONAL_STATUS_PRACTICE = 0
+PERSONAL_STATUS_WORK = 1
+PERSONAL_STATUS_LEAVE = 2
+PERSONAL_STATUS_CHOICE = (
+    (PERSONAL_STATUS_PRACTICE, u"实习"),
+    (PERSONAL_STATUS_WORK, u"在职"),
+    (PERSONAL_STATUS_LEAVE, u"离职"),
+)
+PERSONAL_STATUS_DICT = dict((x, y) for x, y in PERSONAL_STATUS_CHOICE)

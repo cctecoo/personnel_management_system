@@ -44,10 +44,21 @@ def get_sex_name(value):
         return u"女"
 
 
+@register.filter(name='get_personal_status')
+def get_personal_status(value):
+    """取得员工状态"""
+    if value == 0:
+        return u"实习"
+    elif value == 1:
+        return u"在职"
+    elif value == 2:
+        return u"离职"
+
+
 @register.filter(name='format_date')
 def format_date(value):
     if isinstance(value, date):
-        return value.strftime(settings.DATE_INPUT_FORMATS[0])
+        return value.strftime(settings.DATE_INPUT_FORMATS[1])
     else:
         return value
 

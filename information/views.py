@@ -71,6 +71,10 @@ def information_personal_edit_action(request, id):
 
     if form.is_valid():
         form.instance.sex = request.POST['sex']
+        if request.POST['birthday']:
+            form.instance.birthday = request.POST['birthday']
+        if request.POST['phone']:
+            form.instance.phone = request.POST['phone']
         form.save()
 
         response_data['validation'] = True
