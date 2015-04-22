@@ -1,0 +1,67 @@
+{% load extfilters %}
+{#{% load humanize %}#}
+<div class="modal hide fade" id="family_edit">
+    <form class="form-horizontal" action="/information/personal/{{ user_pk }}/family/edit/action/" id="frmEditFamily" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="user_pk" id="id_user_pk" value="{{ user_pk|default_if_none:"" }}"/>
+        <input type="hidden" name="id" id="pk" value="{{ family.instance.id|default_if_none:"" }}"/>
+        <input type="hidden" name="family_validation" id="id_family_validation" value="{{ family_validation }}">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3>编辑家庭信息</h3>
+        </div>
+        <div class="modal-body">
+            {% if family.non_field_errors %}
+                {% with family.non_field_errors|first as error %}
+                    <div class="control-group">
+                        <div class="controls"><span class="error_message">{{ error }}</span></div>
+                    </div>
+                {% endwith %}
+            {% endif %}
+            <div class="control-group">
+                <label class="control-label" for="id_name">名称</label>
+                <div class="controls">
+                    <input type="text" class="span2 {% if family.name.errors %} error_flg{% endif %}" maxlength="30"
+                           id="id_name" name="name" value="{{ family.name.value|default_if_none:"" }}"/>
+                    {% if family.name.errors %}
+                        {% with family.name.errors|first as error %}
+                            <br/>
+                            <span class="error_message">{{ error }}</span>
+                        {% endwith %}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="id_relationship">关系</label>
+                <div class="controls">
+                    <input type="text" class="span2 {% if family.relationship.errors %} error_flg{% endif %}" maxlength="30"
+                           id="id_relationship" name="relationship" value="{{ family.relationship.value|default_if_none:"" }}"/>
+                    {% if family.relationship.errors %}
+                        {% with family.relationship.errors|first as error %}
+                            <br/>
+                            <span class="error_message">{{ error }}</span>
+                        {% endwith %}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="id_mobile_phone">手机号</label>
+                <div class="controls">
+                    <input type="text" class="span2 {% if family.mobile_phone.errors %} error_flg{% endif %}" maxlength="30"
+                           id="id_mobile_phone" name="mobile_phone" value="{{ family.mobile_phone.value|default_if_none:"" }}"/>
+                    {% if family.mobile_phone.errors %}
+                        {% with family.mobile_phone.errors|first as error %}
+                            <br/>
+                            <span class="error_message">{{ error }}</span>
+                        {% endwith %}
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn" data-dismiss="modal" >关闭</button>
+            <button type="button" class="btn btn-primary btn-family-edit">保存</button>
+        </div>
+    </form>
+</div>

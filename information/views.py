@@ -11,7 +11,7 @@ from django.shortcuts import render_to_response, redirect, render, get_object_or
 from django.template import RequestContext
 
 from account.models import User, UserForm
-from information.models import Personal, PersonalForm, Job, JobForm, EducationForm, Education
+from information.models import Personal, PersonalForm, Job, JobForm, EducationForm, Education, FamilyForm, Family
 from utility.exception import PermissionDeniedError
 from utility.role_manager import check_permission_allowed
 
@@ -40,6 +40,10 @@ def information_personal_view(request, id):
     education_count = personal.education.filter(delete_flg=False).count()
     education_list = personal.education.filter(delete_flg=False).order_by("start_date")
 
+    # 家庭信息
+    family_count = personal.family.filter(delete_flg=False).count()
+    family_list = personal.family.filter(delete_flg=False)
+
     return render(request, "information/personal.html", {
         "id": id,
         "full_name": user.full_name,
@@ -49,6 +53,8 @@ def information_personal_view(request, id):
         "job_list": job_list,
         "education_count": education_count,
         "education_list": education_list,
+        "family_count": family_count,
+        "family_list": family_list,
     })
 
 
@@ -65,6 +71,10 @@ def information_personal_edit_action(request, id):
 
     if form.is_valid():
         form.instance.sex = request.POST['sex']
+        if request.POST['birthday']:
+            form.instance.birthday = request.POST['birthday']
+        if request.POST['phone']:
+            form.instance.phone = request.POST['phone']
         form.save()
 
         response_data['validation'] = True
@@ -398,4 +408,167 @@ def education_delete_action(request, user_pk):
         'user_pk': user_pk,
         'education_count': education_count,
         'education_list': education_list,
+    }, context_instance=RequestContext(request))
+
+
+@login_required
+def family_add_view(request, user_pk):
+    """
+    添加家庭信息view
+    """
+    if not check_permission_allowed(request, user_pk):
+        raise PermissionDeniedError
+    # 生成家庭信息Form对象实例
+    familyForm = FamilyForm()
+
+    return render_to_response("information/family_edit.html", {
+        'result': 'OK',
+        'user_pk': user_pk,
+        'family': familyForm,
+    }, context_instance=RequestContext(request))
+
+
+@login_required
+def family_edit_view(request, user_pk, family_id):
+    """
+    编辑家庭信息view
+    """
+    if not check_permission_allowed(request, user_pk):
+        raise PermissionDeniedError
+    # 个人信息id
+    user_id = int(user_pk)
+    # 家庭信息id
+    family_id = int(family_id)
+
+    # 取得个人信息
+    queryset = Personal.objects.filter(belong_to__id=user_id, delete_flg=False)
+    personal = queryset.get()
+
+    # 取得家庭信息
+    queryset = personal.family.filter(id=family_id, delete_flg=False)
+    family = queryset.get()
+
+    # 生成家庭信息对应的Form实例
+    familyForm = FamilyForm(instance=family)
+
+    return render_to_response("information/family_edit.html", {
+        'result': 'OK',
+        'user_pk': user_pk,
+        'family': familyForm,
+    }, context_instance=RequestContext(request))
+
+
+@login_required
+def family_edit_action(request, user_pk):
+    """
+    编辑家庭action
+    """
+    if not check_permission_allowed(request, user_pk):
+        raise PermissionDeniedError
+    # 个人信息id
+    user_id = int(user_pk)
+
+    # 取得请求的家庭信息id
+    id = request.POST['id']
+
+    if id == "":
+        # 取得家庭信息的Form实例
+        form = FamilyForm(request.POST, instance=Family())
+    else:
+        # 取得家庭信息
+        queryset = Family.objects.filter(id__exact=int(id), delete_flg=False)
+        family = queryset.get()
+        # 生成家庭信息对应的Form实例
+        form = FamilyForm(request.POST, instance=family)
+
+    if form.is_valid():
+        if id == "":
+            # 取得个人信息
+            queryset = Personal.objects.filter(belong_to__id=user_id, delete_flg=False)
+            personal = queryset.get()
+            # 保存
+            family = form.save()
+            # 在个人信息中保存家庭信息，既保存relationship
+            personal.family.add(family)
+
+        else:
+            # 保存
+            form.save()
+
+        return render_to_response("information/family_edit.html", {
+            'result': 'OK',
+            'family_validation': True,
+            'user_pk': user_pk,
+            'family': form,
+        }, context_instance=RequestContext(request))
+
+    else:
+        return render_to_response("information/family_edit.html", {
+            'result': 'OK',
+            'family_validation': False,
+            'user_pk': user_pk,
+            'family': form,
+        }, context_instance=RequestContext(request))
+
+
+@login_required
+def family_list_view(request, user_pk):
+    """
+    家庭信息一览View
+    """
+    if not check_permission_allowed(request, user_pk):
+        raise PermissionDeniedError
+    # 个人信息id
+    user_id = int(user_pk)
+    # 取得个人信息
+    queryset = Personal.objects.filter(belong_to__id=user_id, delete_flg=False)
+    personal = queryset.get()
+
+    # 家庭信息
+    family_count = personal.family.filter(delete_flg=False).count()
+    family_list = personal.family.filter(delete_flg=False)
+
+    return render_to_response("information/family_list.html", {
+        'result': 'OK',
+        'user_pk': user_pk,
+        'family_count': family_count,
+        'family_list': family_list,
+    }, context_instance=RequestContext(request))
+
+
+@login_required
+def family_delete_action(request, user_pk):
+    """
+    删除家庭信息action
+    """
+    if not check_permission_allowed(request, user_pk):
+        raise PermissionDeniedError
+    # 个人信息id
+    user_id = int(user_pk)
+
+    pks = []
+    for key in request.POST["family_pks"].split(','):
+        # if key and is_int(key):
+        if key:
+            pks.append(int(key))
+
+    # 取得家庭信息
+    queryset = Family.objects.filter(id__in=pks, delete_flg=False)
+
+    # 将家庭信息逻辑删除
+    queryset.update(delete_flg=True, update_datetime=datetime.now())
+
+    # 取得个人信息
+    queryset = Personal.objects.filter(belong_to__id=user_id, delete_flg=False)
+    personal = queryset.get()
+
+    # 家庭信息
+    family_count = personal.family.filter(delete_flg=False).count()
+    family_list = personal.family.filter(delete_flg=False)
+
+    return render_to_response("information/family_list.html", {
+        'result': 'OK',
+        'user_pk': user_pk,
+        'family_count': family_count,
+        'family_list': family_list,
     }, context_instance=RequestContext(request))

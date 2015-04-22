@@ -25,6 +25,14 @@ urlpatterns = patterns('information.views',
     url(r'^personal/(\d+)/education/delete/action/$', 'education_delete_action'),  # 教育经历删除action
     # 教育经历 end
 
+    # 家庭信息 start
+    url(r'^personal/(\d+)/family/list/$', 'family_list_view'),  # 家庭信息一览view
+    url(r'^personal/(\d+)/family/edit/(\d+)/$', 'family_edit_view'),  # 家庭信息编辑view
+    url(r'^personal/(\d+)/family/edit/action/$', 'family_edit_action'),  # 家庭信息编辑action
+    url(r'^personal/(\d+)/family/add/$', 'family_add_view'),  # 家庭信息添加view
+    url(r'^personal/(\d+)/family/delete/action/$', 'family_delete_action'),  # 家庭信息删除action
+    # 家庭信息 end
+
     # url(r'^contacts/$', 'information_contacts_view'),
 
     )

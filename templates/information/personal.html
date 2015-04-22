@@ -30,32 +30,32 @@
                                     <form class="form-horizontal" action="/information/personal/{{ id }}/edit/action/" id="frmEditInfo" method="post">
                                         {% csrf_token %}
                                         <input type="hidden" name="id" id="pk" value="{{ id }}"/>
-                                        <input type="hidden" name="validation" id="id_validation" value="{{ validation }}">
+{#                                        <input type="hidden" name="validation" id="id_validation" value="{{ validation }}">#}
                                         <div class="control-group">
                                             <label class="control-label" for="id_info">员工编号</label>
                                             <div class="controls">
-                                                <input type="text" id="id_info" name="personal_id" class="highlight first_focus"
+                                                <input type="text" id="id_info" name="personal_id" class="highlight "
                                                        maxlength="30" disabled="disabled" value="{{ id }}"/>
                                             </div>
                                         </div>
                                         <div class="control-group">
                                             <label class="control-label" for="id_full_name">姓名</label>
                                             <div class="controls">
-                                                <input type="text" id="id_full_name" name="full_name" class="highlight first_focus"
+                                                <input type="text" id="id_full_name" name="full_name" class="highlight "
                                                        maxlength="30" disabled="disabled" value="{{ full_name }}"/>
                                             </div>
                                         </div>
     {#                                    <div class="control-group">#}
     {#                                        <label class="control-label" for="id_department">所属部门</label>#}
     {#                                        <div class="controls">#}
-    {#                                            <input type="text" id="id_department" name="department" class="highlight first_focus"#}
+    {#                                            <input type="text" id="id_department" name="department" class="highlight "#}
     {#                                                   maxlength="30" disabled="disabled" value="{{ form.personal.department.name|default_if_none:"" }}"/>#}
     {#                                        </div>#}
     {#                                    </div>#}
                                         <div class="control-group">
                                             <label class="control-label" for="id_role">身份</label>
                                             <div class="controls">
-                                                <input type="text" id="id_full_name" name="full_name" class="highlight first_focus"
+                                                <input type="text" id="id_full_name" name="full_name" class="highlight "
                                                        maxlength="30" disabled="disabled" value="{{ role_name }}"/>
                                             </div>
                                         </div>
@@ -67,7 +67,7 @@
                                                     <button class="btn" type="button" data-toggle="dropdown" id="id_sex_trigger">
                                                         {% if form.sex %}{{ form.sex|get_sex_name }}{% else %}男{% endif %}
                                                     </button>
-                                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                    <button class="btn dropdown-toggle first_focus" data-toggle="dropdown">
                                                         <span class="caret"></span>
                                                     </button>
                                                     <ul class="dropdown-menu">
@@ -78,9 +78,47 @@
                                             </div>
                                         </div>
                                         <div class="control-group">
+                                            <label class="control-label" for="id_birthday">出生年月</label>
+                                            <div class="controls">
+                                                <div class="input-append date personal_birthday" data-date="{{ form.birthday|default_if_none:""|format_date }}" data-date-format="yyyy-mm-dd">
+                                                    <input type="text" class="span2 {% if form.birthday.errors %} error_flg{% endif %}"
+                                                           id="id_birthday" name="birthday" value="{{ form.birthday|default_if_none:""|format_date }}" readonly/>
+                                                    <span class="add-on"><i class="icon-th"></i></span>
+                                                </div>
+                                                {% if form.birthday.errors %}
+                                                    {% with form.birthday.errors|first as error %}
+                                                        <br/>
+                                                        <span class="error_message">{{ error }}</span>
+                                                    {% endwith %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <label class="control-label" for="id_phone">手机号</label>
+                                            <div class="controls">
+{#                                                <input type="text" class="span2 {% if form.phone.errors %} error_flg{% endif %}" maxlength="30"#}
+{#                                                       id="id_phone" name="phone" value="{{ form.phone|default_if_none:"" }}"/>#}
+                                                <input type="text" id="id_phone" name="phone" class="highlight "
+                                                       maxlength="30" disabled="disabled" value="{{ form.phone|default_if_none:"" }}"/>
+                                                {% if form.phone.errors %}
+                                                    {% with form.phone.errors|first as error %}
+                                                        <br/>
+                                                        <span class="error_message">{{ error }}</span>
+                                                    {% endwith %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <label class="control-label" for="id_status">状态</label>
+                                            <div class="controls">
+                                                <input type="text" id="id_status" name="status" class="highlight "
+                                                       maxlength="30" disabled="disabled" value="{{ form.status|get_personal_status }}"/>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
                                             <label class="control-label" for="id_update_datetime">更新时间</label>
                                             <div class="controls">
-                                                <input type="text" id="id_update_datetime" name="full_name" class="highlight first_focus"
+                                                <input type="text" id="id_update_datetime" name="update_datetime" class="highlight "
                                                        maxlength="30" disabled="disabled" value="{{ form.update_datetime|format_datetime }}"/>
                                             </div>
                                         </div>
@@ -226,6 +264,66 @@
                                 </div>
 
                                 <div class="tab-pane fade " id="tab_family">
+                                    <div id="familyList">
+                                    {% if family_count == 0 %}
+                                        <div class="row">
+                                            <div class="span8 alert alert-block" style="margin-left: 120px">
+                                                <h4>注意!</h4>
+                                                还未添加任何家庭信息
+                                                    <br />
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1), 添加： 逐条添加，每一次只能生成一条家庭信息；
+                                            </div>
+                                            <div class="span8" style="margin-left: 120px">
+                                                <a class="btn btn-primary btn-small family_edit" href="#" data-form="/information/personal/{{ id }}/family/add/">添加</a>
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <div class="row">
+                                            <div class="span4" style="margin-left: 120px">
+                                                <div class="btn-toolbar">
+                                                    <div class="btn-group">
+                                                        <a class="btn" id="btnNew" data-toggle="dropdown" href="#"><i class="icon-plus"></i></a>
+                                                        <ul class="dropdown-menu">
+                                                            <li><a class="family_edit" href="#" data-form="/information/personal/{{ id }}/family/add/">添加</a></li>
+                                                        </ul>
+                                                        <a class="btn disabled" id="btnDelete"><i class="icon-trash"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="span4" style="text-align: right;padding-top: 20px;">
+                                                <span class="label">共{{ family_count }}条信息</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="span8" style="margin-left: 120px">
+                                                <div class="search_result_list">
+                                                    <table class="table table-bordered table-hover">
+                                                        <thead>
+                                                        <tr>
+                                                            <th class="check_column" style="vertical-align:middle"><input type="checkbox" id="checkSelectAll"/></th>
+                                                            <th style="vertical-align:middle">名称</th>
+                                                            <th style="vertical-align:middle">关系</th>
+                                                            <th style="vertical-align:middle">手机号</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% for family in family_list %}
+                                                            <tr>
+                                                                <td class="cell_center"><input type="checkbox" class="list_selector" pk="{{ family.id }}"/></td>
+                                                                <td class="cell_center">
+                                                                    <a class="btn-link family_edit" href="#" data-form="/information/personal/{{ id }}/family/edit/{{ family.id }}/">{{ family.name }}</a>
+                                                                </td>
+                                                                <td class="cell_center">{{ family.relationship }}</td>
+                                                                <td class="cell_center">{{ family.mobile_phone }}</td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    </div>
                                 </div>
 
                             </div>
@@ -235,6 +333,7 @@
         </div>
         <div class="modal hide fade" id="jobFormModal"></div>
         <div class="modal hide fade" id="educationFormModal"></div>
+        <div class="modal hide fade" id="familyFormModal"></div>
     </div>
     <form action="/information/personal/{{ id }}/job/delete/action/" method="post" id="frm_jobList">
         {% csrf_token %}
@@ -243,5 +342,9 @@
     <form action="/information/personal/{{ id }}/education/delete/action/" method="post" id="frm_educationList">
         {% csrf_token %}
         <input type="hidden" name="education_pks" id="id_education_pks" value=""/>
+    </form>
+    <form action="/information/personal/{{ id }}/family/delete/action/" method="post" id="frm_familyList">
+        {% csrf_token %}
+        <input type="hidden" name="family_pks" id="id_family_pks" value=""/>
     </form>
 {% endblock %}
