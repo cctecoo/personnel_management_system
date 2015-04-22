@@ -226,6 +226,66 @@
                                 </div>
 
                                 <div class="tab-pane fade " id="tab_family">
+                                    <div id="familyList">
+                                    {% if family_count == 0 %}
+                                        <div class="row">
+                                            <div class="span8 alert alert-block" style="margin-left: 120px">
+                                                <h4>注意!</h4>
+                                                还未添加任何家庭信息
+                                                    <br />
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1), 添加： 逐条添加，每一次只能生成一条家庭信息；
+                                            </div>
+                                            <div class="span8" style="margin-left: 120px">
+                                                <a class="btn btn-primary btn-small family_edit" href="#" data-form="/information/personal/{{ id }}/family/add/">添加</a>
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <div class="row">
+                                            <div class="span4" style="margin-left: 120px">
+                                                <div class="btn-toolbar">
+                                                    <div class="btn-group">
+                                                        <a class="btn" id="btnNew" data-toggle="dropdown" href="#"><i class="icon-plus"></i></a>
+                                                        <ul class="dropdown-menu">
+                                                            <li><a class="family_edit" href="#" data-form="/information/personal/{{ id }}/family/add/">添加</a></li>
+                                                        </ul>
+                                                        <a class="btn disabled" id="btnDelete"><i class="icon-trash"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="span4" style="text-align: right;padding-top: 20px;">
+                                                <span class="label">共{{ family_count }}条信息</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="span8" style="margin-left: 120px">
+                                                <div class="search_result_list">
+                                                    <table class="table table-bordered table-hover">
+                                                        <thead>
+                                                        <tr>
+                                                            <th class="check_column" style="vertical-align:middle"><input type="checkbox" id="checkSelectAll"/></th>
+                                                            <th style="vertical-align:middle">名称</th>
+                                                            <th style="vertical-align:middle">关系</th>
+                                                            <th style="vertical-align:middle">手机号</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% for family in family_list %}
+                                                            <tr>
+                                                                <td class="cell_center"><input type="checkbox" class="list_selector" pk="{{ family.id }}"/></td>
+                                                                <td class="cell_center">
+                                                                    <a class="btn-link family_edit" href="#" data-form="/information/personal/{{ id }}/family/edit/{{ family.id }}/">{{ family.name }}</a>
+                                                                </td>
+                                                                <td class="cell_center">{{ family.relationship }}</td>
+                                                                <td class="cell_center">{{ family.mobile_phone }}</td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    </div>
                                 </div>
 
                             </div>
@@ -235,6 +295,7 @@
         </div>
         <div class="modal hide fade" id="jobFormModal"></div>
         <div class="modal hide fade" id="educationFormModal"></div>
+        <div class="modal hide fade" id="familyFormModal"></div>
     </div>
     <form action="/information/personal/{{ id }}/job/delete/action/" method="post" id="frm_jobList">
         {% csrf_token %}
@@ -243,5 +304,9 @@
     <form action="/information/personal/{{ id }}/education/delete/action/" method="post" id="frm_educationList">
         {% csrf_token %}
         <input type="hidden" name="education_pks" id="id_education_pks" value=""/>
+    </form>
+    <form action="/information/personal/{{ id }}/family/delete/action/" method="post" id="frm_familyList">
+        {% csrf_token %}
+        <input type="hidden" name="family_pks" id="id_family_pks" value=""/>
     </form>
 {% endblock %}

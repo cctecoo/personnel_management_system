@@ -42,6 +42,21 @@ class Education(models.Model):
         db_table = "hr_manage_information_education"
 
 
+class Family(models.Model):
+    """
+    家庭信息
+    """
+    name = models.CharField(u"名称", max_length=255)  # 名称
+    relationship = models.CharField(u"关系", max_length=255)  # 关系
+    mobile_phone = models.CharField(u'手机号', null=True, max_length=100)  # 手机号
+    create_datetime = models.DateTimeField(auto_now_add=True)  # 创建日期
+    update_datetime = models.DateTimeField(auto_now=True)  # 更新日期
+    delete_flg = models.BooleanField(default=False)  # 删除标志位
+
+    class Meta:
+        db_table = "hr_manage_information_family"
+
+
 class Personal(models.Model):
     """
     个人信息
@@ -53,6 +68,8 @@ class Personal(models.Model):
                                  db_table="hr_manage_information_personal_job_relationships")  # 工作经历
     education = models.ManyToManyField(Education, null=True, blank=True, related_name="personal_education",
                                        db_table="hr_manage_information_personal_education_relationships")  # 教育经历
+    family = models.ManyToManyField(Family, null=True, blank=True, related_name="personal_family",
+                                    db_table="hr_manage_information_personal_family_relationships")  # 家庭信息
     delete_flg = models.BooleanField(default=False)  # 删除标志位
 
     class Meta:
@@ -111,3 +128,21 @@ class EducationForm(ModelForm):
     class Meta:
         model = Education
         fields = ('start_date', 'end_date', 'school', 'kind',)
+
+
+class FamilyForm(ModelForm):
+    """
+    家庭信息Form
+    """
+
+    def clean(self):
+        cleaned_data = super(FamilyForm, self).clean()
+
+        return cleaned_data
+
+    def __init__(self, *args, **kwargs):
+        super(FamilyForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        model = Family
+        fields = ('name', 'relationship', 'mobile_phone',)
