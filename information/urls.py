@@ -33,7 +33,7 @@ urlpatterns = patterns('information.views',
     url(r'^personal/(\d+)/family/delete/action/$', 'family_delete_action'),  # 家庭信息删除action
     # 家庭信息 end
 
-    # url(r'^contacts/$', 'information_contacts_view'),
+    url(r'^contacts/$', 'information_contacts_view'),
 
     )
 

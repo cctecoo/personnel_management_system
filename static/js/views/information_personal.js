@@ -26,7 +26,11 @@ define([
             'click .btn-family-edit': 'onFamilyEditEnterClicked',  //family
             'click #checkSelectAll':'selectAll',
             'change .list_selector':'selectorChanged',
-            'click #btnDelete':'remove_click' //删除
+            'click #btnDelete':'remove_click',  //删除
+
+            // 通讯录使用 start
+            'click #btnSearch':'search'  //根据关键字搜索
+            // 通讯录使用 end
         },
 
         initialize:function() {
@@ -489,7 +493,18 @@ define([
                     $(tab+' #btnDelete').addClass('disabled');
                 }
             }
+        },
+
+        // 通讯录使用 start
+        // 搜索
+        search:function() {
+            var queryKey = $('#queryKey').val();
+            queryKey = $.trim(queryKey);
+            var url = '/information/contacts/?';
+            url = url + 'q=' + encodeURIComponent(queryKey);
+            window.location.href = url;
         }
+        // 通讯录使用 end
 
     });
 });

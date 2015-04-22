@@ -6,12 +6,14 @@ import json
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render_to_response, redirect, render, get_object_or_404
 from django.template import RequestContext
 
 from account.models import User, UserForm
 from information.models import Personal, PersonalForm, Job, JobForm, EducationForm, Education, FamilyForm, Family
+from utility.base_view import get_list_params
 from utility.exception import PermissionDeniedError
 from utility.role_manager import check_permission_allowed
 
@@ -572,3 +574,28 @@ def family_delete_action(request, user_pk):
         'family_count': family_count,
         'family_list': family_list,
     }, context_instance=RequestContext(request))
+
+
+@login_required
+def information_contacts_view(request):
+    """
+    通讯录
+    """
+    queryset = User.objects.select_related('personal').filter(is_superuser=False).\
+        exclude(is_active=False).exclude(personal__status=2).order_by('groups')
+    params = get_list_params(request)
+
+    # 搜索条件
+    if params['query']:
+        queryset = queryset.filter(
+            Q(full_name__contains=params['query']) |
+            Q(groups__name__contains=params['query'])
+        )
+
+    total_count = queryset.count()
+
+    return render(request, "information/contacts.html", {
+        "users": queryset,
+        "query_params": params,
+        "total_count": total_count,
+    })
