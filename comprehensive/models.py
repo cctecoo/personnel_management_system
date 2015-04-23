@@ -33,10 +33,9 @@ class DepartmentForm(ModelForm):
 
         # 检查数据有效性
         # 添加模式下检查名称是否唯一
-        if 'name' in cleaned_data and 'mode' in cleaned_data:
-        # if 'name' in cleaned_data :
+        if 'name' in cleaned_data and cleaned_data['mode']:
             name = cleaned_data['name']
-            if Department.objects.filter(name=name).count() > 0:
+            if Department.objects.filter(name=name).exclude(delete_flg=True).count() > 0:
                 msg = u"该名称已存在。"
                 self._errors["name"] = self.error_class([msg])
 

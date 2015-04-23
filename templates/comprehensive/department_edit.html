@@ -15,7 +15,6 @@
         <form class="form-horizontal" action="/comprehensive/department/edit/action/" method="post" id="frmEditDepartment">
             {% csrf_token %}
             <input type="hidden" name="redirect_url" id="redirect_url" value="{{ redirect_url|default_if_none:"" }}"/>
-            <input type="hidden" name="mode" value="1"/>
             <input type="hidden" name="department_id" value="{{ department_id }}"/>
             <div class="well well-large fly_left_well">
                 <div class="control-group">

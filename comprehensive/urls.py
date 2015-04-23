@@ -11,6 +11,7 @@ urlpatterns = patterns('comprehensive.views',
     url(r'^department/add/action/$', 'department_add_action'),  # 部门增加action
     url(r'^department/edit/(\d*)/$', 'department_edit_view'),  # 部门修改view
     url(r'^department/edit/action/$', 'department_edit_action'),  # 部门修改action
+    url(r'^department/delete/action/$', 'department_delete_action'),  # 部门删除action
 
     # url(r'^department/set/$', 'department_set_view'),  # 人员部门配置view
 
