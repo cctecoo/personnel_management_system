@@ -132,6 +132,7 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'account',
     'information',
+    'comprehensive',
 )
 
 # 自定义User Model

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}添加部门{% endblock %}
+{% block content %}
+    <input type="hidden" id="amd_module" value="{% static "js/views/department_add.js" %}"/>
+    <div class="container" style="margin-top:60px;">
+        <div class="page_header">
+            <ul class="bc">
+                <li><a href="/">主页</a> <span class="divider">/</span></li>
+                <li><a href="/comprehensive/department/list/">部门一览</a> <span class="divider">/</span></li>
+                <li class="active">添加部门</li>
+            </ul>
+        </div>
+        <form class="form-horizontal" action="/comprehensive/department/add/action/" id="frmAddDepartment" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="redirect_url" id="redirect_url" value="{{ redirect_url|default_if_none:"" }}"/>
+            <input type="hidden" name="mode" value="1"/>
+            <div class="well well-large fly_left_well">
+                <div class="control-group">
+                    <label class="control-label" for="txtName">名称</label>
+                    <div class="controls">
+                        <input type="text" id="txtName" name="name" class="highlight first_focus{% if form.name.errors %} error_flg{% endif %}" maxlength="30" value="{{ form.name.value|default_if_none:"" }}"/>
+                        {% if form.name.errors %}
+                            {% with form.name.errors|first as error %}
+                                <br/><span class="error_message">{{ error }}</span>
+                            {% endwith %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="txtDescription">描述</label>
+                    <div class="controls">
+                        <input type="text" id="txtDescription" name="description" class="highlight input{% if form.description.errors %} error_flg{% endif %}" maxlength="30" value="{{ form.description.value|default_if_none:"" }}"/>
+                        {% if form.description.errors %}
+                            {% with form.description.errors|first as error %}
+                                <br/><span class="error_message">{{ error }}</span>
+                            {% endwith %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="controls">
+                        <button type="button" id="btnSave" class="btn btn-primary default_button">保存</button>
+                        <button type="button" id="btnReturn" class="btn">返回</button>
+                    </div>
+                </div>
+                {% if form.non_field_errors %}
+                    {% with form.non_field_errors|first as error %}
+                        <div class="control-group">
+                            <div class="controls"><span class="error_message">{{ error }}</span></div>
+                        </div>
+                    {% endwith %}
+                {% endif %}
+            </div>
+        </form>
+    </div>
+{% endblock %}
