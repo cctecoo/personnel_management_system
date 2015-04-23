@@ -25,4 +25,7 @@ urlpatterns = patterns('',
 
     # 基础信息模块
     url(r'^information/', include('information.urls')),
+
+    # 综合管理模块
+    url(r'^comprehensive/', include('comprehensive.urls')),
 )

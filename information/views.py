@@ -582,7 +582,7 @@ def information_contacts_view(request):
     通讯录
     """
     queryset = User.objects.select_related('personal').filter(is_superuser=False).\
-        exclude(is_active=False).exclude(personal__status=2).order_by('groups')
+        exclude(is_active=False).exclude(personal__status=2).order_by('groups', 'full_name')
     params = get_list_params(request)
 
     # 搜索条件

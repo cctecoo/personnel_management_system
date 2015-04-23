@@ -7,6 +7,7 @@ from django.forms import ModelForm, Form, DateField, CharField
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
+from comprehensive.models import Department
 from utility.constant import PERSONAL_SEX_MALE, PERSONAL_STATUS_CHOICE, PERSONAL_STATUS_WORK
 
 
@@ -65,7 +66,7 @@ class Personal(models.Model):
     birthday = models.DateField(u"出生年月", null=True, blank=True,)  # 出生年月
     phone = models.CharField(u'手机号', null=True, blank=True, max_length=100)  # 手机号
     status = models.PositiveSmallIntegerField(u"员工状态", blank=True, choices=PERSONAL_STATUS_CHOICE, default=PERSONAL_STATUS_WORK)  # 员工状态
-    # department = models.ForeignKey(Department, null=True, blank=True, related_name="belong_to_personal")  # 个人所属部门
+    department = models.ForeignKey(Department, null=True, blank=True, related_name="belong_to_personal")  # 个人所属部门
     job = models.ManyToManyField(Job, null=True, blank=True, related_name="personal_job",
                                  db_table="hr_manage_information_personal_job_relationships")  # 工作经历
     education = models.ManyToManyField(Education, null=True, blank=True, related_name="personal_education",
