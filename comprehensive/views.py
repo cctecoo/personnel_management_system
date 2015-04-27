@@ -11,10 +11,11 @@ from django.http import HttpResponse
 from django.shortcuts import render_to_response, redirect, render, get_object_or_404
 from django.template import RequestContext
 
+from account.models import User
 from comprehensive.models import Department, DepartmentForm
 from utility.base_view import get_list_params, back_to_original_page
 from utility.exception import PermissionDeniedError
-from utility.role_manager import check_role, ROLE_STAFF
+from utility.role_manager import check_role, ROLE_STAFF, ROLE_MANAGER, ROLE_HR, ROLES
 
 
 @login_required
@@ -139,3 +140,30 @@ def department_delete_action(request):
 
     Department.objects.filter(id__in=pks).update(delete_flg=True)
     return back_to_original_page(request, '/comprehensive/department/list/')
+
+
+@login_required
+def department_set_view(request):
+    """
+    部门配置
+    """
+    if check_role(request, ROLE_STAFF):
+        raise PermissionDeniedError
+
+    user = User.objects.filter(is_superuser=False).exclude(is_active=False)
+    # 如果是经理，权限等同管理员，显示全部
+    if check_role(request, ROLE_MANAGER):
+        user = user
+    # 如果是人事，只显示员工
+    elif check_role(request, ROLE_HR):
+        user = user.filter(groups__name=ROLES[ROLE_STAFF])
+
+    total_count = user.count()
+
+    department = Department.objects.filter(delete_flg=False).order_by('name')
+
+    return render(request, "comprehensive/department_set.html", {
+        "personal_list": user,
+        "department": department,
+        "total_count": total_count,
+    })

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load extfilters %}
 {% block title %} - 公告一览{% endblock %}
 {% block content %}
     <input type="hidden" id="amd_module" value="{% static "js/views/notice_list.js" %}"/>
@@ -64,15 +65,13 @@
                                 <tr>
                                     <td class="cell_center"><input type="checkbox" class="list_selector" pk="{{ notice.id }}"/></td>
                                     <td>{{ notice.title }}</td>
-                                    <td>{{ notice.start_date|date:"Y/m/d H:i:s" }}</td>
-                                    <td>{{ notice.end_date|date:"Y/m/d H:i:s" }}</td>
-                                    <td>{{ notice.dep_id }}</td>
+                                    <td>{{ notice.start_date|format_datetime:'%Y-%m-%d %H:%M' }}</td>
+                                    <td>{{ notice.end_date|format_datetime:'%Y-%m-%d %H:%M' }}</td>
+                                    <td>{{ notice.dep_id|get_dep_name_by_dep_id }}</td>
                                     <td>
-{#                                        <a href="/notice/{{ notice.id }}/" class="btn-link edit_link">{{ notice.content }}</a>#}
                                         <a href="/notice/{{ notice.id }}/" class="btn-link edit_link">
                                             <div style="width: 140px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{ notice.content }}</div>
                                         </a>
-
                                     </td>
                                 </tr>
                             {% endfor %}

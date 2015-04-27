@@ -9,10 +9,10 @@ urlpatterns = patterns('notice.views',
 
     url(r'^add/$', 'notice_add_view'),
     url(r'^add/action/$', 'notice_add_action'),
-    # url(r'^delete/action/$', 'notice_delete_action'),
+    url(r'^delete/action/$', 'notice_delete_action'),
     url(r'^edit/(\d*)/$', 'notice_edit_view'),
-    # url(r'^edit/action/$', 'notice_edit_action'),
+    url(r'^edit/action/$', 'notice_edit_action'),
     url(r'^list/$', 'notice_list_view'),
-    # url(r'^(\d*)/$', 'notice_view_view'),
+    url(r'^(\d*)/$', 'notice_view_view'),
 
     )
