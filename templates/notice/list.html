@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %} - 公告一览{% endblock %}
+{% block content %}
+    <input type="hidden" id="amd_module" value="{% static "js/views/notice_list.js" %}"/>
+    <input type="hidden" id="total_count" value="{{ total_count }}"/>
+{% for key,value in query_params.items %}
+    <input type="hidden" id="qs_{{ key }}" value="{{ value }}"/>
+{% endfor %}
+    <div class="container" style="margin-top:60px;">
+        <div class="page_header">
+            <ul class="bc">
+                <li><a href="/">主页</a> <span class="divider">/</span></li>
+                <li class="active">公告一览</li>
+            </ul>
+            <form class="form-search search_box">
+                <div class="input-append">
+                    <input type="text" class="span2 search-query" id="queryKey" value="{{ query_params.query }}">
+                    <button type="button" class="btn default_button" id="btnSearch">搜索</button>
+                </div>
+            </form>
+        </div>
+        {% if total_count == 0 %}
+            <div class="row">
+                <div class="span12 alert alert-block">
+                    <h4>注意!</h4>
+                    您搜索的结果不存在，请确认后重试。
+                </div>
+                <div class="span12">
+                    <a class="btn btn-primary" href="/notice/add/">添加公告</a>
+                </div>
+            </div>
+        {% else %}
+            <div class="row">
+                <div class="span4">
+                    <div class="btn-toolbar">
+                        <div class="btn-group">
+                            <a class="btn" id="btnNew" href="/notice/add/" title="添加"><i class="icon-plus"></i></a>
+                            <a class="btn disabled" id="btnEdit" title="修改"><i class="icon-edit"></i></a>
+                            <a class="btn disabled" id="btnDelete" title="删除"><i class="icon-trash"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="span4" style="text-align: right;padding-top: 20px;">
+                    <span class="label">共{{ total_count }}条记录</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span8">
+                    <div class="search_result_list">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th class="check_column"><input type="checkbox" id="checkSelectAll"/></th>
+                                <th>标题</th>
+                                <th><a href="#" class="data_column" sort_key="sd">开始日期</a></th>
+                                <th><a href="#" class="data_column" sort_key="ed">结束日期</a></th>
+                                <th>部门</th>
+                                <th>内容</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for notice in notices %}
+                                <tr>
+                                    <td class="cell_center"><input type="checkbox" class="list_selector" pk="{{ notice.id }}"/></td>
+                                    <td>{{ notice.title }}</td>
+                                    <td>{{ notice.start_date|date:"Y/m/d H:i:s" }}</td>
+                                    <td>{{ notice.end_date|date:"Y/m/d H:i:s" }}</td>
+                                    <td>{{ notice.dep_id }}</td>
+                                    <td>
+{#                                        <a href="/notice/{{ notice.id }}/" class="btn-link edit_link">{{ notice.content }}</a>#}
+                                        <a href="/notice/{{ notice.id }}/" class="btn-link edit_link">
+                                            <div style="width: 140px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{ notice.content }}</div>
+                                        </a>
+
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        {% if need_pagination %}
+                            <div class="pagination pagination-centered pagination-small" style="margin-top:-10px;">
+                                <ul>
+                                    <li id="btnPrevPage"><a href="#">前页</a></li>
+                                    <li id="btnNextPage"><a href="#">次页</a></li>
+                                </ul>
+                                <div class="pull-right label" id="lblPageCounter">
+                                    0/0页
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    <form action="/notice/delete/action/" method="post" id="frmDeleteNotice">
+        {% csrf_token %}
+        <input type="hidden" name="pk" id="pk"/>
+        <input type="hidden" name="redirect_url" id="redirect_url" value="{{ url_path }}"/>
+    </form>
+{% endblock %}
