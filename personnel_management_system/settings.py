@@ -133,6 +133,7 @@ INSTALLED_APPS = (
     'account',
     'information',
     'comprehensive',
+    'notice',
 )
 
 # 自定义User Model

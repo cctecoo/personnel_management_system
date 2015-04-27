@@ -8,6 +8,15 @@
             </a>
             <ul class="nav nav-pills">
             {% if user|in_group:"经理,人事" or user.is_superuser %}
+                <li class="dropdown" id="menuNotice" active-by-url="\/notice\/">
+                    <li active-by-url="\/notice\/"><a href="/notice/list/">公告</a></li>
+                </li>
+            {% endif %}
+{#                staff 动态滚动公告#}
+            </ul>
+
+            <ul class="nav nav-pills">
+            {% if user|in_group:"经理,人事" or user.is_superuser %}
                 <li class="dropdown" id="menuComprehensive" active-by-url="\/comprehensive\/">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#menuComprehensive">
                         综合管理

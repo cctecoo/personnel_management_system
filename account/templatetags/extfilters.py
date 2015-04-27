@@ -69,3 +69,12 @@ def format_datetime(value):
         return value.strftime(settings.DATETIME_INPUT_FORMATS[1])
     else:
         return value
+
+
+@register.filter(name='selected_departments')
+def selected_departments(departments, selected_departments):
+    """是否为选中部门"""
+    if not selected_departments:
+        return False
+    else:
+        return str(departments) in selected_departments
