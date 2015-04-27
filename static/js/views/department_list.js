@@ -1,9 +1,6 @@
 /**
  * Created by cc on 15-4-23.
  */
-/**
- * Created by cc on 15-4-14.
- */
 define([
     'require',
     'jquery',
@@ -22,8 +19,8 @@ define([
             'click #checkSelectAll':'selectAll',
             'change .list_selector':'selectorChanged',
             'click #btnSearch':'search', //根据关键字搜索
-            'click #btnDelete':'deleteUser', //删除用户
-            'click #btnEdit':'editUser' //编辑用户
+            'click #btnDelete':'deleteUser', //删除部门
+            'click #btnEdit':'editUser' //编辑部门
         },
 
         // 初始化
@@ -78,7 +75,7 @@ define([
             $('#frmDeleteDepartment').submit();
         },
 
-        // 编辑用户
+        // 编辑部门
         editUser:function() {
             var pk = $('.list_selector:checked').attr('pk');
             var url = '/comprehensive/department/edit/' + pk + '/';

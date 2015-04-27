@@ -35,7 +35,7 @@ define([
             $('#frmEditDepartment').submit();
         },
 
-        // 返回用户一览
+        // 返回部门一览
         return_to_prev_page:function() {
             var ru = $('#redirect_url');
             var url;

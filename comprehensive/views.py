@@ -30,7 +30,7 @@ def department_list_view(request):
 
     # 搜索条件
     if params['query']:
-        queryset = queryset.filter(username__contains=params['query'])
+        queryset = queryset.filter(name__contains=params['query'])
 
     total_count = queryset.count()
 
@@ -58,7 +58,7 @@ def department_add_view(request):
 @login_required
 def department_add_action(request):
     """
-    增加部门
+    增加部门action
     """
     if check_role(request, ROLE_STAFF):
         raise PermissionDeniedError
@@ -108,7 +108,6 @@ def department_edit_action(request):
     department = get_object_or_404(Department, id=department_id)
     form = DepartmentForm(request.POST, instance=department)
 
-    # form.cleaned_data['mode'] = request.POST['mode']
     if form.is_valid():
         form.instance.name = request.POST['name']
         if request.POST['description']:
@@ -121,3 +120,22 @@ def department_edit_action(request):
             "form": form,
             "department_id": department_id,
         })
+
+
+@login_required
+def department_delete_action(request):
+    """
+    删除部门
+    """
+    if check_role(request, ROLE_STAFF):
+        raise PermissionDeniedError
+
+    pk = request.POST["pk"]
+    pks = []
+    for key in pk.split(','):
+        # if key and is_int(key):
+        if key:
+            pks.append(int(key))
+
+    Department.objects.filter(id__in=pks).update(delete_flg=True)
+    return back_to_original_page(request, '/comprehensive/department/list/')
