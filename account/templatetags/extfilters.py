@@ -9,6 +9,8 @@ from django.template.defaultfilters import register
 from django.utils.encoding import force_unicode
 from django.conf import settings
 
+from comprehensive.models import Department
+
 
 register = template.Library()
 
@@ -56,17 +58,17 @@ def get_personal_status(value):
 
 
 @register.filter(name='format_date')
-def format_date(value):
+def format_date(value, format=settings.DATE_INPUT_FORMATS[1]):
     if isinstance(value, date):
-        return value.strftime(settings.DATE_INPUT_FORMATS[1])
+        return value.strftime(format)
     else:
         return value
 
 
 @register.filter(name='format_datetime')
-def format_datetime(value):
+def format_datetime(value, format=settings.DATETIME_INPUT_FORMATS[1]):
     if isinstance(value, datetime):
-        return value.strftime(settings.DATETIME_INPUT_FORMATS[1])
+        return value.strftime(format)
     else:
         return value
 
@@ -78,3 +80,17 @@ def selected_departments(departments, selected_departments):
         return False
     else:
         return str(departments) in selected_departments
+
+
+@register.filter(name='get_dep_name_by_dep_id')
+def get_dep_name_by_dep_id(dep_id):
+    """
+    根据部门id获取部门名。
+    """
+    department_name = ""
+    departments_id = [int(i) for i in dep_id.split(',')]
+
+    departments = Department.objects.filter(id__in=departments_id)
+    for department in departments:
+        department_name = department_name+','+department.name
+    return department_name[1:]

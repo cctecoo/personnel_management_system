@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load extfilters %}
+{% block title %} - 查看公告{% endblock %}
+{% block content %}
+    <input type="hidden" id="amd_module" value="{% static "js/views/notice_view.js" %}"/>
+    <div class="container" style="margin-top:60px;">
+        <div class="page_header">
+            <ul class="bc">
+                <li><a href="/">主页</a> <span class="divider">/</span></li>
+                <li class="active">{{ form.instance.title }}</li>
+            </ul>
+        </div>
+        <div class="row">
+            <div class="row-fluid alert alert-block">
+                <div class="span4 offset5">
+                    <h1>{{ form.instance.title }}</h1>
+                </div>
+                <div class="span2 offset10">
+                    <h6>TO: {{ form.instance.dep_id|get_dep_name_by_dep_id }}</h6>
+                </div>
+                <div class="span10 offset1">
+                    <h4>{{ form.instance.content }}</h4>
+                </div>
+            </div>
+            <div class="span12">
+                <div class="control-group">
+                    <div class="controls">
+                        <button type="button" id="btnReturn" class="btn btn-primary default_button">返回</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

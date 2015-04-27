@@ -18,6 +18,10 @@ class Department(models.Model):
     update_datetime = models.DateTimeField(auto_now=True)  # 更新日期
     delete_flg = models.BooleanField(default=False)  # 删除标志位
 
+    def get_name(self):
+        """返回部门名称"""
+        return self.name
+
     class Meta:
         db_table = "hr_manage_comprehensive_department"
 

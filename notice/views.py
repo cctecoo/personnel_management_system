@@ -123,3 +123,72 @@ def notice_edit_view(request, notice_id):
         "departments": departments,
         "departments_need": True,
     })
+
+
+@login_required
+def notice_edit_action(request):
+    """
+    编辑公告动作
+    """
+    if check_role(request, ROLE_STAFF):
+        raise PermissionDeniedError
+
+    notice_id = request.POST['notice_id']
+    notice = get_object_or_404(Notice, id=notice_id)
+    form = NoticeForm(request.POST, instance=notice)
+
+    if form.is_valid():
+        dep_id = ','.join(dict(request.POST)['dep_id'])
+
+        form.instance.title = request.POST['title']
+        form.instance.start_date = request.POST['start_date']
+        form.instance.end_date = request.POST['end_date']
+        form.instance.content = request.POST['content']
+        form.instance.dep_id = dep_id
+
+        form.save()
+
+        return back_to_original_page(request, "/notice/list/")
+    else:
+        departments = Department.objects.filter(delete_flg=False)
+        return render(request, "notice/edit.html", {
+            "form": form,
+            "notice_id": notice_id,
+            "departments": departments,
+            "departments_need": 'dep_id' in request.POST,
+        })
+
+
+@login_required
+def notice_delete_action(request):
+    """
+    删除公告
+    """
+    if check_role(request, ROLE_STAFF):
+        raise PermissionDeniedError
+
+    pk = request.POST["pk"]
+    pks = []
+    for key in pk.split(','):
+        # if key and is_int(key):
+        if key:
+            pks.append(int(key))
+
+    Notice.objects.filter(id__in=pks).update(delete_flg=True)
+    return back_to_original_page(request, '/notice/list/')
+
+
+@login_required
+def notice_view_view(request, notice_id):
+    """
+    查看公告
+    """
+    # 只能查看自己所属部门的公告，待完善
+
+    notice = get_object_or_404(Notice, id=notice_id)
+    form = NoticeForm(instance=notice)
+
+    return render(request, "notice/view.html", {
+        "form": form,
+        "notice_id": notice_id,
+    })

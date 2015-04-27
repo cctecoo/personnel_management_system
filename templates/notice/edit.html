@@ -32,9 +32,9 @@
                 <div class="control-group">
                     <label class="control-label" for="addStart_date">开始日期</label>
                     <div class="controls">
-                        <div class="input-append date start_date" data-date="{{ form.start_date.value|default_if_none:"" }}" data-date-format="yyyy-mm-dd hh:mm">
+                        <div class="input-append date start_date" data-date="{{ form.start_date.value|default_if_none:""|format_datetime:'%Y-%m-%d %H:%M' }}" data-date-format="yyyy-mm-dd hh:mm">
                             <input class="span2 first_focus"
-                                   size="16" type="text" id="addStart_date" name="start_date" value="{{ form.start_date.value|default_if_none:"" }}" maxlength="10" readonly>
+                                   size="16" type="text" id="addStart_date" name="start_date" value="{{ form.start_date.value|default_if_none:""|format_datetime:'%Y-%m-%d %H:%M' }}" maxlength="10" readonly>
                             <span class="add-on"><i class="icon-th"></i></span>
                         </div>
                         {% if form.start_date.errors %}
@@ -48,9 +48,9 @@
                 <div class="control-group">
                     <label class="control-label" for="addEnd_date">结束日期</label>
                     <div class="controls">
-                        <div class="input-append date end_date" data-date="{{ form.end_date.value|default_if_none:"" }}" data-date-format="yyyy-mm-dd hh:mm">
+                        <div class="input-append date end_date" data-date="{{ form.end_date.value|default_if_none:""|format_datetime:'%Y-%m-%d %H:%M' }}" data-date-format="yyyy-mm-dd hh:mm">
                             <input class="span2"
-                                   size="16" type="text" id="addEnd_date" name="end_date" value="{{ form.end_date.value|default_if_none:"" }}" maxlength="10" readonly>
+                                   size="16" type="text" id="addEnd_date" name="end_date" value="{{ form.end_date.value|default_if_none:""|format_datetime:'%Y-%m-%d %H:%M' }}" maxlength="10" readonly>
                             <span class="add-on"><i class="icon-th"></i></span>
                         </div>
                         {% if form.end_date.errors %}
