@@ -44,6 +44,8 @@ define([
             $('.personal_birthday').datepicker({
                 format: 'yyyy-mm-dd',
                 language: 'zh-CN'
+            }).on('changeDate', function(event) {
+                $(event.target).datepicker('hide')
             });
 
             $(document).ready(function() {
@@ -73,10 +75,14 @@ define([
                         $('.job_start_date').datepicker({
                             format: 'yyyy-mm-dd',
                             language: 'zh-CN'
+                        }).on('changeDate', function(event) {
+                            $(event.target).datepicker('hide')
                         });
                         $('.job_end_date').datepicker({
                             format: 'yyyy-mm-dd',
                             language: 'zh-CN'
+                        }).on('changeDate', function(event) {
+                            $(event.target).datepicker('hide')
                         });
                         $("#jobFormModal").modal('show');
                     }
@@ -137,10 +143,14 @@ define([
                             $('.job_start_date').datepicker({
                                 format: 'yyyy-mm-dd',
                                 language: 'zh-CN'
+                            }).on('changeDate', function(event) {
+                                $(event.target).datepicker('hide')
                             });
                             $('.job_end_date').datepicker({
                                 format: 'yyyy-mm-dd',
                                 language: 'zh-CN'
+                            }).on('changeDate', function(event) {
+                                $(event.target).datepicker('hide')
                             });
                         }
                     }
@@ -180,10 +190,14 @@ define([
                         $('.education_start_date').datepicker({
                             format: 'yyyy-mm-dd',
                             language: 'zh-CN'
+                        }).on('changeDate', function(event) {
+                            $(event.target).datepicker('hide')
                         });
                         $('.education_end_date').datepicker({
                             format: 'yyyy-mm-dd',
                             language: 'zh-CN'
+                        }).on('changeDate', function(event) {
+                            $(event.target).datepicker('hide')
                         });
                         $("#educationFormModal").modal('show');
                     }
@@ -244,10 +258,14 @@ define([
                             $('.education_start_date').datepicker({
                                 format: 'yyyy-mm-dd',
                                 language: 'zh-CN'
+                            }).on('changeDate', function(event) {
+                                $(event.target).datepicker('hide')
                             });
                             $('.education_end_date').datepicker({
                                 format: 'yyyy-mm-dd',
                                 language: 'zh-CN'
+                            }).on('changeDate', function(event) {
+                                $(event.target).datepicker('hide')
                             });
                         }
                     }
