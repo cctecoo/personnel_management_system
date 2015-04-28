@@ -45,13 +45,13 @@
                                                        maxlength="30" disabled="disabled" value="{{ full_name }}"/>
                                             </div>
                                         </div>
-    {#                                    <div class="control-group">#}
-    {#                                        <label class="control-label" for="id_department">所属部门</label>#}
-    {#                                        <div class="controls">#}
-    {#                                            <input type="text" id="id_department" name="department" class="highlight "#}
-    {#                                                   maxlength="30" disabled="disabled" value="{{ form.personal.department.name|default_if_none:"" }}"/>#}
-    {#                                        </div>#}
-    {#                                    </div>#}
+                                        <div class="control-group">
+                                            <label class="control-label" for="id_department">所属部门</label>
+                                            <div class="controls">
+                                                <input type="text" id="id_department" name="department" class="highlight "
+                                                       maxlength="30" disabled="disabled" value="{{ form.department.name|default_if_none:"" }}"/>
+                                            </div>
+                                        </div>
                                         <div class="control-group">
                                             <label class="control-label" for="id_role">身份</label>
                                             <div class="controls">
@@ -172,7 +172,6 @@
                                                             <th style="vertical-align:middle">结束时间</th>
                                                             <th style="vertical-align:middle">公司名称</th>
                                                             <th style="vertical-align:middle">职位</th>
-{#                                                            <th style="vertical-align:middle">所在地</th>#}
                                                         </tr>
                                                         </thead>
                                                         <tbody>

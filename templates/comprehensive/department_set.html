@@ -40,45 +40,34 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for personal in personal_list %}
+                        {% for form in form_list %}
                             <tr>
-                                <td class="cell_center">{{ personal.get_full_name }}</td>
-                                <td class="cell_center">{{ personal.groups.all|first }}</td>
-                                <td class="cell_center">
-                                    <a href="javascript: void(0);" data-type="select" class="department" data-original-title="所属部门" data-url="/comprehensive/department/set/edit/"
-                                       data-pk="{{ personal.id }}" data-name="{{ department.id }}" data-value="{{ department.get_name }}" data-detail-id="{{ department.id }}">
-                                    </a>
+                                <td class="cell_center">{{ form.get_full_name }}</td>
+                                <td class="cell_center">{{ form.groups.all|first }}</td>
+                                <td class="cell_center" id="{{ form.personal.id }}">
+                                    <div class="dropdown">
+                                        <a class="dropdown-toggle first_focus" id="id_department_trigger" data-toggle="dropdown" data-target="#" href="#"
+                                            data-value="{{ form.personal.department.id|default_if_none:"" }}">
+                                            {{ form.personal.department.name|default_if_none:"" }}
+                                            <div class="caret"></div>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            {% for department in departments %}
+                                                <li><a href="javascript: void(0);" class="dropdownItem" for="id_department" value="{{ department.id }}" data-url="/comprehensive/department/set/edit/action/">{{ department.name }}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
                                 </td>
                                 <td class="cell_center">
-                                    <a href="javascript: void(0);" data-type="select" class="status" data-original-title="状态" data-url="/comprehensive/department/set/edit/"
-                                       data-pk="{{ personal.id }}" data-name="{{ department.id }}" data-value="{{ department.get_name }}" data-detail-id="{{ department.id }}">
+                                    <a href="javascript: void(0);" data-type="select" class="status" data-original-title="状态" data-url="/comprehensive/status/set/edit/action/"
+                                       data-pk="{{ form.personal.id }}" data-value="{{ department.get_name }}">
+                                        {{ form.personal.status|get_personal_status }}
                                     </a>
                                 </td>
                             </tr>
                         {% endfor %}
                         </tbody>
                     </table>
-                </div>
-                <div class="control-group">
-                    <div class="alert alert-error hide">
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        <h4>错误提示：</h4>
-                        <strong id="confirm-error-message"></strong>
-                    </div>
-                    <div class="controls">
-                        {% if not excluded_error %}
-                        <button type="button" id="btnNext" class="btn btn-primary default_button" data-toggle="modal" href="#process-confirm" data-show="true">确定</button>
-                        {% endif %}
-                        <button type="button" id="btnReturn" class="btn">返回</button>
-                    </div>
-                    <div id="process-confirm" class="modal hide fade">
-                        <div class="modal-header"><a class="close" data-dismiss="modal" >&times;</a><h3>处理确认</h3></div>
-                        <div class="modal-body"><p>请再次确认您的操作信息，以免出现误操作。</p></div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn" data-dismiss="modal" >关闭</button>
-                            <button type="button" class="btn btn-primary btn-process-confirm">确认</button>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

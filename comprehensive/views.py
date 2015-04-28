@@ -13,6 +13,7 @@ from django.template import RequestContext
 
 from account.models import User
 from comprehensive.models import Department, DepartmentForm
+from information.models import Personal, PersonalForm, PersonalDepartmentForm
 from utility.base_view import get_list_params, back_to_original_page
 from utility.exception import PermissionDeniedError
 from utility.role_manager import check_role, ROLE_STAFF, ROLE_MANAGER, ROLE_HR, ROLES
@@ -145,7 +146,7 @@ def department_delete_action(request):
 @login_required
 def department_set_view(request):
     """
-    部门配置
+    部门配置view
     """
     if check_role(request, ROLE_STAFF):
         raise PermissionDeniedError
@@ -163,7 +164,61 @@ def department_set_view(request):
     department = Department.objects.filter(delete_flg=False).order_by('name')
 
     return render(request, "comprehensive/department_set.html", {
-        "personal_list": user,
-        "department": department,
+        "form_list": user,
+        "departments": department,
         "total_count": total_count,
     })
+
+
+@login_required
+def department_set_edit_action(request):
+    """
+    部门配置
+    """
+    if check_role(request, ROLE_STAFF):
+        raise PermissionDeniedError
+
+    response_data = {}
+    personal_id = request.POST.get('personal_id')
+    department_id = request.POST.get('department_id')
+
+    queryset = Personal.objects.filter(id=personal_id).get()
+    form = PersonalDepartmentForm(request.POST, instance=queryset)
+
+    if form.is_valid():
+        form.instance.department_id = department_id
+        form.save()
+
+        response_data['validation'] = True
+        return HttpResponse(json.dumps(response_data), mimetype="application/json")
+
+    else:
+        response_data['validation'] = False
+        return HttpResponse(json.dumps(response_data), mimetype="application/json")
+
+
+@login_required
+def status_set_edit_action(request):
+    """
+    状态配置
+    """
+    if check_role(request, ROLE_STAFF):
+        raise PermissionDeniedError
+
+    response_data = {}
+    # 取得请求的订单id
+    id = request.POST['name']
+    # 取得请求的商品id
+    pk = request.POST['pk']
+    # 取得请求的出票方式
+    value = request.POST['value']
+
+    # 取得人员
+    queryset = Personal.objects.filter(id=pk, delete_flg=False)
+    personal = queryset.get()
+
+    # 更新人员状态
+    personal.status = value
+    personal.save()
+
+    return HttpResponse(json.dumps(response_data), mimetype="application/json")
