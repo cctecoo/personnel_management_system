@@ -16,4 +16,6 @@ urlpatterns = patterns('comprehensive.views',
     url(r'^department/set/$', 'department_set_view'),  # 人员部门配置view
     url(r'^department/set/edit/action/$', 'department_set_edit_action'),  # 人员部门配置action
 
+    url(r'^status/set/edit/action/$', 'status_set_edit_action'),  # 人员状态配置action
+
     )

@@ -33,30 +33,25 @@ define([
             $(document).ready(function() {
 
                 $('.tip').tooltip();
-                if($('#excluded_error').val() == 1){
-                    $('[name="data-type"]').editable({
-                        disabled: true
-                    });
-                }else{
-                    $('.tip').tooltip();
-                    // 状态初期化
-                    $('.status').editable({
-                        emptytext: '空',
-                        source: [
-                            {value: 0, text: '实习'},
-                            {value: 1, text: '在职'},
-                            {value: 9, text: '离职'}
-                        ],
-                        success: function(data){
-                            if (data.error_code > 0) {
-                                return data.error_msg;
-                            }
-                        },
-                        error: function(){
-                            return '与服务器通讯发生错误，请稍后重试。';
+
+                // 状态初期化
+                $('.status').editable({
+                    emptytext: '空',
+                    source: [
+                        {value: 0, text: '实习'},
+                        {value: 1, text: '在职'},
+                        {value: 2, text: '离职'}
+                    ],
+                    success: function(data){
+                        if (data.error_code > 0) {
+                            return data.error_msg;
                         }
-                    });
-                };
+                    },
+                    error: function(){
+                        return '与服务器通讯发生错误，请稍后重试。';
+                    }
+                });
+
             });
         },
 

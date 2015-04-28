@@ -125,6 +125,23 @@ class PersonalDepartmentForm(ModelForm):
         fields = ('department',)
 
 
+class PersonalStatusForm(ModelForm):
+    """
+    个人状态Form
+    """
+    def clean(self):
+        cleaned_data = super(PersonalStatusForm, self).clean()
+        # 检查数据有效性
+        return cleaned_data
+
+    def __init__(self, *args, **kwargs):
+        super(PersonalStatusForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        model = Personal
+        fields = ('status',)
+
+
 class JobForm(ModelForm):
     """
     工作经历Form

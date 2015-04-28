@@ -195,3 +195,30 @@ def department_set_edit_action(request):
     else:
         response_data['validation'] = False
         return HttpResponse(json.dumps(response_data), mimetype="application/json")
+
+
+@login_required
+def status_set_edit_action(request):
+    """
+    状态配置
+    """
+    if check_role(request, ROLE_STAFF):
+        raise PermissionDeniedError
+
+    response_data = {}
+    # 取得请求的订单id
+    id = request.POST['name']
+    # 取得请求的商品id
+    pk = request.POST['pk']
+    # 取得请求的出票方式
+    value = request.POST['value']
+
+    # 取得人员
+    queryset = Personal.objects.filter(id=pk, delete_flg=False)
+    personal = queryset.get()
+
+    # 更新人员状态
+    personal.status = value
+    personal.save()
+
+    return HttpResponse(json.dumps(response_data), mimetype="application/json")

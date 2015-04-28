@@ -59,8 +59,9 @@
                                     </div>
                                 </td>
                                 <td class="cell_center">
-                                    <a href="javascript: void(0);" data-type="select" class="status" data-original-title="状态" data-url="/comprehensive/department/set/edit/"
-                                       data-pk="{{ form.personal.id }}" data-name="{{ department.id }}" data-value="{{ department.get_name }}" data-detail-id="{{ department.id }}">
+                                    <a href="javascript: void(0);" data-type="select" class="status" data-original-title="状态" data-url="/comprehensive/status/set/edit/action/"
+                                       data-pk="{{ form.personal.id }}" data-value="{{ department.get_name }}">
+                                        {{ form.personal.status|get_personal_status }}
                                     </a>
                                 </td>
                             </tr>
