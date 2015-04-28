@@ -5,6 +5,7 @@ import datetime
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render_to_response, redirect, render, get_object_or_404
 
@@ -111,8 +112,8 @@ def user_list_view(request):
     """
     if check_role(request, ROLE_STAFF):
         raise PermissionDeniedError
-
-    queryset = User.objects.filter(is_superuser=False).exclude(is_active=False)
+    # 排除自己，为了避免删除自己的帐号
+    queryset = User.objects.filter(is_superuser=False).exclude(is_active=False).exclude(id=request.user.id)
     params = get_list_params(request)
 
     order_dict = {
@@ -124,7 +125,11 @@ def user_list_view(request):
 
     # 搜索条件
     if params['query']:
-        queryset = queryset.filter(username__contains=params['query'])
+        queryset = queryset.filter(
+            Q(username__contains=params['query']) |
+            Q(full_name__contains=params['query']) |
+            Q(groups__name__contains=params['query'])
+        )
 
     # 如果是经理，权限等同管理员，显示全部
     if check_role(request, ROLE_MANAGER):
