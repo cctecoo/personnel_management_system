@@ -16,7 +16,8 @@ define([
 
         // 事件定义
         events:{
-            'click .dropdownItem': 'dropdownItem_click'
+            'click .dropdownItem': 'dropdownItem_click',
+            'click #btnSearch':'search'  //根据关键字搜索
         },
 
         // 初始化
@@ -97,6 +98,15 @@ define([
             });
             return true;
             //return false; // prevent the click propagation
+        },
+
+        // 搜索
+        search:function() {
+            var queryKey = $('#queryKey').val();
+            queryKey = $.trim(queryKey);
+            var url = '/comprehensive/department/set/?';
+            url = url + 'q=' + encodeURIComponent(queryKey);
+            window.location.href = url;
         }
 
     });

@@ -15,6 +15,12 @@
                 <li><a href="/comprehensive/department/list/">部门一览</a> <span class="divider">/</span></li>
                 <li class="active">部门管理</li>
             </ul>
+            <form class="form-search search_box">
+                <div class="input-append">
+                    <input type="text" class="span2 search-query" id="queryKey" value="{{ query_params.query }}">
+                    <button type="button" class="btn default_button" id="btnSearch">搜索</button>
+                </div>
+            </form>
         </div>
         {% if total_count == 0 %}
             <div class="row">
@@ -42,7 +48,9 @@
                         <tbody>
                         {% for form in form_list %}
                             <tr>
-                                <td class="cell_center">{{ form.get_full_name }}</td>
+                                <td class="cell_center">
+                                    <a href="/information/personal/{{ form.id }}/">{{ form.get_full_name }}</a>
+                                </td>
                                 <td class="cell_center">{{ form.groups.all|first }}</td>
                                 <td class="cell_center" id="{{ form.personal.id }}">
                                     <div class="dropdown">
@@ -60,7 +68,7 @@
                                 </td>
                                 <td class="cell_center">
                                     <a href="javascript: void(0);" data-type="select" class="status" data-original-title="状态" data-url="/comprehensive/status/set/edit/action/"
-                                       data-pk="{{ form.personal.id }}" data-value="{{ department.get_name }}">
+                                       data-pk="{{ form.personal.id }}" data-value="{{ form.personal.status|get_personal_status }}">
                                         {{ form.personal.status|get_personal_status }}
                                     </a>
                                 </td>

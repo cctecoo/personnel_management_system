@@ -151,7 +151,18 @@ def department_set_view(request):
     if check_role(request, ROLE_STAFF):
         raise PermissionDeniedError
 
-    user = User.objects.filter(is_superuser=False).exclude(is_active=False)
+    user = User.objects.select_related('personal').filter(is_superuser=False).\
+        exclude(is_active=False).order_by('groups', 'full_name')
+    params = get_list_params(request)
+
+    # 搜索条件
+    if params['query']:
+        user = user.filter(
+            Q(full_name__contains=params['query']) |
+            Q(groups__name__contains=params['query']) |
+            Q(personal__department__name__contains=params['query'])
+        )
+
     # 如果是经理，权限等同管理员，显示全部
     if check_role(request, ROLE_MANAGER):
         user = user
@@ -166,6 +177,7 @@ def department_set_view(request):
     return render(request, "comprehensive/department_set.html", {
         "form_list": user,
         "departments": department,
+        "query_params": params,
         "total_count": total_count,
     })
 
@@ -206,11 +218,9 @@ def status_set_edit_action(request):
         raise PermissionDeniedError
 
     response_data = {}
-    # 取得请求的订单id
-    id = request.POST['name']
-    # 取得请求的商品id
+    # 取得请求的人员信息id
     pk = request.POST['pk']
-    # 取得请求的出票方式
+    # 取得请求的状态
     value = request.POST['value']
 
     # 取得人员
