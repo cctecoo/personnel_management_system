@@ -2,6 +2,9 @@
 {% load staticfiles %}
 {% load extfilters %}
 {% block title %} - 修改公告{% endblock %}
+{% block include_css %}
+    <link href="{{ STATIC_URL }}css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
+{% endblock %}
 {% block content %}
     <input type="hidden" id="amd_module" value="{% static "js/views/notice_edit.js" %}"/>
     <div class="container" style="margin-top:60px;">

@@ -49,7 +49,7 @@
                                         <td class="cell_center">{{ forloop.counter }}</td>
                                         <td class="cell_center">{{ user.get_full_name }}</td>
                                         <td class="cell_center">{{ user.groups.all|first }}</td>
-                                        <td class="cell_center">{{ user.personal.phone }}</td>
+                                        <td class="cell_center">{{ user.personal.phone|default_if_none:"" }}</td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>

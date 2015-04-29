@@ -1,8 +1,35 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 {% load extfilters %}
 {% block title %} - 首页{% endblock %}
 {% block content %}
-    <input type="hidden" id="amd_module" value="{{ static_path }}js/views/index.js"/>
+    <input type="hidden" id="amd_module" value="{% static "js/views/index.js" %}"/>
     <div class="container" style="margin-top:60px;">
+        <div id="myCarousel" class="carousel slide">
+{#            <ol class="carousel-indicators">#}
+{#                {% for notice in notices %}#}
+{#                    <li data-target="#myCarousel" data-slide-to="{{ forloop.counter0 }}" {% if forloop.counter == 1 %}class="active"{% endif %}></li>#}
+{#                {% endfor %}#}
+{#            </ol>#}
+            <!-- Carousel items -->
+            <div class="carousel-inner">
+                {% for notice in notices %}
+                    <div class="{% if forloop.counter == 1 %}active {% endif %}item" id="{{ notice.id }}">
+                        <div class="row">
+                            <a href="/notice/{{ notice.id }}/">
+                                <div class="span8 offset2 alert alert-block">
+                                    <h2>{{ notice.title }}</h2>
+                                    <h5>TO: {{ notice.dep_id|get_dep_name_by_dep_id }}</h5>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <!-- Carousel nav -->
+            <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+            <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
+        </div>
+
     </div>
 {% endblock %}
