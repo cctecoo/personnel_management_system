@@ -15,6 +15,10 @@ define([
 
         initialize:function(parent) {
             this.parentView = parent;
+            //$('.carousel').carousel({
+            //  interval: 1000
+            //})
+            $('#myCarousel').carousel()
         }
 
     });
