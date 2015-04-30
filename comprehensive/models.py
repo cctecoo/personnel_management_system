@@ -52,3 +52,36 @@ class DepartmentForm(ModelForm):
     class Meta:
         model = Department
         fields = ('name', 'description',)
+
+
+class CheckIn(models.Model):
+    """
+    考勤
+    """
+    personal_id = models.IntegerField(u'人员id', max_length=255)  # 人员id（逻辑外键）
+    date = models.DateField(auto_now_add=True)  # 创建日期
+    create_datetime = models.DateTimeField(auto_now_add=True)  # 创建日期时间
+    update_datetime = models.DateTimeField(auto_now=True)  # 更新日期
+
+    class Meta:
+        db_table = "hr_manage_comprehensive_check_in"
+
+
+class CheckInForm(ModelForm):
+    """
+    考勤Form
+    """
+    mode = forms.IntegerField(required=False)
+
+    def clean(self):
+        cleaned_data = super(CheckInForm, self).clean()
+
+        # 检查数据有效性
+        return cleaned_data
+
+    def __init__(self, *args, **kwargs):
+        super(CheckInForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        model = CheckIn
+        fields = ('personal_id',)

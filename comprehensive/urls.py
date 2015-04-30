@@ -18,4 +18,9 @@ urlpatterns = patterns('comprehensive.views',
 
     url(r'^status/set/edit/action/$', 'status_set_edit_action'),  # 人员状态配置action
 
+    # 签到
+    url(r'^check_in/(\d*)/$', 'check_in_personal_view'),  # 个人考勤view
+    # url(r'^check_in/list/$', 'check_in_list_view'),  # 统计考勤view
+    url(r'^check_in/action/$', 'check_in_action'),  # 签到action
+
     )

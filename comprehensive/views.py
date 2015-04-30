@@ -12,11 +12,11 @@ from django.shortcuts import render_to_response, redirect, render, get_object_or
 from django.template import RequestContext
 
 from account.models import User
-from comprehensive.models import Department, DepartmentForm
+from comprehensive.models import Department, DepartmentForm, CheckIn, CheckInForm
 from information.models import Personal, PersonalForm, PersonalDepartmentForm
 from utility.base_view import get_list_params, back_to_original_page
 from utility.exception import PermissionDeniedError
-from utility.role_manager import check_role, ROLE_STAFF, ROLE_MANAGER, ROLE_HR, ROLES
+from utility.role_manager import check_role, ROLE_STAFF, ROLE_MANAGER, ROLE_HR, ROLES, check_permission_allowed
 
 
 @login_required
@@ -230,5 +230,64 @@ def status_set_edit_action(request):
     # 更新人员状态
     personal.status = value
     personal.save()
+
+    return HttpResponse(json.dumps(response_data), mimetype="application/json")
+
+
+@login_required
+def check_in_personal_view(request, user_id):
+    """
+    个人考勤view
+    """
+    if not check_permission_allowed(request, user_id):
+        raise PermissionDeniedError
+
+    params = get_list_params(request)
+
+    user = get_object_or_404(User, id=user_id)
+    role_name = None
+    if user.groups.count() > 0:
+        role_name = user.groups.get().name
+
+    queryset = CheckIn.objects.filter(personal_id=user.personal_id)
+    total_count = queryset.count()
+
+    return render(request, "comprehensive/check_in_personal_view.html", {
+        "check_in": queryset[params['from']:params['to']],
+        "query_params": params,
+        "need_pagination": params['limit'] < total_count,
+        "total_count": total_count,
+        "user": user,
+        # "role_name": role_name,
+    })
+
+
+@login_required
+def check_in_action(request):
+    """
+    签到action
+    """
+    response_data = {}
+    personal_id = request.POST.get('personal_id')
+
+    today = datetime.now().strftime(settings.DATE_INPUT_FORMATS[1])
+    # form = CheckInForm(request.POST, instance=CheckIn())
+    #
+    # if form.is_valid():
+    #     form.instance.personal_id = personal_id
+    #     form.save()
+    #
+    #     response_data['validation'] = True
+    #     return HttpResponse(json.dumps(response_data), mimetype="application/json")
+    #
+    # else:
+    #     response_data['validation'] = False
+    #     return HttpResponse(json.dumps(response_data), mimetype="application/json")
+
+    # 有bug
+    check_in, created = CheckIn.objects.get_or_create(date=today)
+    check_in.personal_id = personal_id
+
+    check_in.save()
 
     return HttpResponse(json.dumps(response_data), mimetype="application/json")
