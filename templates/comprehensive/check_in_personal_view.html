@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load extfilters %}
+{% block title %} - 查看考勤{% endblock %}
+{% block content %}
+    <input type="hidden" id="total_count" value="{{ total_count }}"/>
+    <input type="hidden" id="amd_module" value="{% static "js/views/check_in.js" %}"/>
+    <input type="hidden" name="user_id" id="user_id" value="{{ user.id }}"/>
+    <div class="container" style="margin-top:60px;">
+        <div class="page_header">
+            <ul class="bc">
+                <li><a href="/">主页</a> <span class="divider">/</span></li>
+                <li><a href="/comprehensive/check_in/list/">考勤一览</a> <span class="divider">/</span></li>
+                <li class="active">{{ user.full_name }}</li>
+            </ul>
+        </div>
+        {% if total_count == 0 %}
+            <div class="row">
+                <div class="span12 alert alert-block">
+                    <h4>注意!</h4>
+                    您还没有考勤记录，请先签到。
+                </div>
+
+                <div class="span1">
+                    <input type="hidden" name="personal_id" id="personal_id" value="{{ user.personal.id }}"/>
+                    <button class="btn btn-success" data-url="/comprehensive/check_in/action/" type="button">签到</button>
+                </div>
+            </div>
+        {% else %}
+            <div class="row">
+                <div class="span1">
+                    <input type="hidden" name="personal_id" id="personal_id" value="{{ user.personal.id }}"/>
+                    <button class="btn btn-success" data-url="/comprehensive/check_in/action/" type="button">签到</button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="span12" style="text-align: right;padding-top: 20px;">
+                    <span class="label">共{{ total_count }}条记录</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <div class="search_result_list">
+                        <table class="table table-bordered table-hover" >
+                            <thead>
+                                <tr>
+                                    <th>姓名</th>
+                                    <th>日期</th>
+                                    <th>首次</th>
+                                    <th>末次</th>
+                                    <th>时长</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in check_in %}
+                                    <tr>
+                                        <td class="cell_center">{{ user.full_name }}</td>
+                                        <td class="cell_center">{{ item.date|format_date }}</td>
+                                        <td class="cell_center">{{ item.create_datetime|format_datetime }}</td>
+                                        <td class="cell_center">{{ item.update_datetime|format_datetime }}</td>
+{#                                        <td class="cell_center">{{ item.create_datetime-item.update_datetime }}</td>#}
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                        </table>
+                        {% if need_pagination %}
+                            <div class="pagination pagination-centered pagination-small" style="margin-top:-10px;">
+                                <ul>
+                                    <li id="btnPrevPage"><a href="#">前页</a></li>
+                                    <li id="btnNextPage"><a href="#">次页</a></li>
+                                </ul>
+                                <div class="pull-right label" id="lblPageCounter">
+                                    0/0页
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

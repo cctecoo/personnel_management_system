@@ -23,7 +23,8 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li active-by-url="\/comprehensive\/department\/set\/"><a href="/comprehensive/department/set/">部门管理</a></li>
-                        <li active-by-url="\/comprehensive\/check_in\/"><a href="/comprehensive/check_in/">考勤管理</a></li>
+                        <li active-by-url="\/comprehensive\/check_in\/"><a href="/comprehensive/check_in/{{ user.id }}/">考勤管理</a></li>
+{#                        staff 个人签到信息#}
                     </ul>
                 </li>
             {% endif %}
