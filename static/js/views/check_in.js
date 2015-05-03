@@ -68,6 +68,33 @@ define([
                     }else {
                         $('.tip').tooltip();
                         alert('签到成功');
+
+                        var url = "/comprehensive/check_in/" + $('#user_id').val() + "/list/";
+                        $.ajax({
+                            type: "GET",
+                            url: url,
+                            success: function(data){
+                                if (data.error_code > 0) {
+                                    window.alert(data.error_msg);
+                                }else {
+                                    $('#CheckInList').html(data);
+                                    $('.tip').tooltip();
+
+                                    $('.btn-success').popover({
+                                    placement: "top",
+                                    trigger: "hover",
+                                    title: "提示",
+                                    delay: {show:1000, hide:100},
+                                    content: "一天可以签到多次，统计首次和末次。"
+                            });
+
+                                }
+                            },
+                            error: function(){
+                                window.alert('与服务器通讯发生错误，请稍后重试。');
+                            }
+                        });
+
                     }
                 },
                 error: function(){
@@ -101,12 +128,6 @@ define([
                 if (fr > 0) {
                     url = url + '&fr=' + encodeURIComponent(String(fr));
                 }
-                if (this.queryString.order_field) {
-                    url = url + '&of=' + encodeURIComponent(this.queryString.order_field);
-                    if (this.queryString.order_direction === '-') {
-                        url = url + '&od=-';
-                    }
-                }
                 this.btnPrevPage.find('a').prop('href', url);
             }
 
@@ -118,12 +139,6 @@ define([
                 url = this.url;
                 url = url + 'fr=' + encodeURIComponent(fr);
                 url = url + '&lm=' + encodeURIComponent(this.queryString.limit);
-                if (this.queryString.order_field) {
-                    url = url + '&of=' + encodeURIComponent(this.queryString.order_field);
-                    if (this.queryString.order_direction === '-') {
-                        url = url + '&od=-';
-                    }
-                }
                 this.btnNextPage.find('a').prop('href', url);
             }
 

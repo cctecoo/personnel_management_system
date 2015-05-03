@@ -245,11 +245,8 @@ def check_in_personal_view(request, user_id):
     params = get_list_params(request)
 
     user = get_object_or_404(User, id=user_id)
-    role_name = None
-    if user.groups.count() > 0:
-        role_name = user.groups.get().name
 
-    queryset = CheckIn.objects.filter(personal_id=user.personal_id)
+    queryset = CheckIn.objects.filter(personal_id=user.personal_id).order_by('-date')
     total_count = queryset.count()
 
     return render(request, "comprehensive/check_in_personal_view.html", {
@@ -258,7 +255,6 @@ def check_in_personal_view(request, user_id):
         "need_pagination": params['limit'] < total_count,
         "total_count": total_count,
         "user": user,
-        # "role_name": role_name,
     })
 
 
@@ -271,23 +267,89 @@ def check_in_action(request):
     personal_id = request.POST.get('personal_id')
 
     today = datetime.now().strftime(settings.DATE_INPUT_FORMATS[1])
-    # form = CheckInForm(request.POST, instance=CheckIn())
-    #
-    # if form.is_valid():
-    #     form.instance.personal_id = personal_id
-    #     form.save()
-    #
-    #     response_data['validation'] = True
-    #     return HttpResponse(json.dumps(response_data), mimetype="application/json")
-    #
-    # else:
-    #     response_data['validation'] = False
-    #     return HttpResponse(json.dumps(response_data), mimetype="application/json")
 
-    # 有bug
-    check_in, created = CheckIn.objects.get_or_create(date=today)
-    check_in.personal_id = personal_id
+    check_in, created = CheckIn.objects.get_or_create(date=today, personal_id=personal_id)
 
-    check_in.save()
+    if created:
+        personal = Personal.objects.filter(id=personal_id, delete_flg=False).get()
+        form = CheckInForm(request.POST, instance=check_in)
+        check_in_r = form.save()
+        # 保存relationship
+        personal.check_in.add(check_in_r)
+    else:
+        check_in.save()
+
+    # check_in.personal_id = personal_id
 
     return HttpResponse(json.dumps(response_data), mimetype="application/json")
+
+
+@login_required
+def check_in_personal_list_view(request, user_id):
+    """
+    个人考勤list view
+    """
+    if not check_permission_allowed(request, user_id):
+        raise PermissionDeniedError
+
+    params = get_list_params(request)
+
+    user = get_object_or_404(User, id=user_id)
+
+    queryset = CheckIn.objects.filter(personal_id=user.personal_id).order_by('-date')
+    total_count = queryset.count()
+
+    return render(request, "comprehensive/check_in_personal_list.html", {
+        "check_in": queryset[params['from']:params['to']],
+        "query_params": params,
+        "need_pagination": params['limit'] < total_count,
+        "total_count": total_count,
+        "user": user,
+    })
+
+
+@login_required
+def check_in_all_list_view(request):
+    """
+    所有人考勤记录view
+    """
+    if check_role(request, ROLE_STAFF):
+        raise PermissionDeniedError
+
+    params = get_list_params(request)
+
+    # queryset = CheckIn.objects.filter().order_by('-date', 'groups', 'full_name')
+    queryset = CheckIn.objects.order_by('-date')
+
+    order_dict = {
+        u"da": "date",
+    }
+
+    # 搜索条件
+    if params['query']:
+        queryset = queryset.filter(
+            Q(personal_check_in__belong_to__full_name__contains=params['query']) |
+            Q(personal_check_in__belong_to__groups__name__contains=params['query'])
+        )
+
+    # 如果是经理，权限等同管理员，显示全部
+    if check_role(request, ROLE_MANAGER):
+        queryset = queryset
+    # 如果是人事，只显示员工
+    elif check_role(request, ROLE_HR):
+        queryset = queryset.filter(personal_check_in__belong_to__groups__name=ROLES[ROLE_STAFF])
+
+    # 排序
+    if not params['order_field'] or not order_dict.has_key(params['order_field']):
+        params['order_field'] = 'da'
+        params['order_direction'] = '-'
+
+    queryset = queryset.order_by("%s%s" % (params['order_direction'], order_dict[params['order_field']]))
+    total_count = queryset.count()
+
+    return render(request, "comprehensive/check_in_all_view.html", {
+        "check_in": queryset[params['from']:params['to']],
+        "query_params": params,
+        "need_pagination": params['limit'] < total_count,
+        "total_count": total_count,
+    })

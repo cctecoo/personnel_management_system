@@ -59,6 +59,7 @@ class CheckIn(models.Model):
     考勤
     """
     personal_id = models.IntegerField(u'人员id', max_length=255)  # 人员id（逻辑外键）
+    # personal = models.ForeignKey(Personal, null=True, blank=True, related_name="check_in_belong_to")  # 所属个人信息
     date = models.DateField(auto_now_add=True)  # 创建日期
     create_datetime = models.DateTimeField(auto_now_add=True)  # 创建日期时间
     update_datetime = models.DateTimeField(auto_now=True)  # 更新日期

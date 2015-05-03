@@ -7,7 +7,7 @@ from django.forms import ModelForm, Form, DateField, CharField
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
-from comprehensive.models import Department
+from comprehensive.models import Department, CheckIn
 from utility.constant import PERSONAL_SEX_MALE, PERSONAL_STATUS_CHOICE, PERSONAL_STATUS_WORK
 
 
@@ -73,6 +73,8 @@ class Personal(models.Model):
                                        db_table="hr_manage_information_personal_education_relationships")  # 教育经历
     family = models.ManyToManyField(Family, null=True, blank=True, related_name="personal_family",
                                     db_table="hr_manage_information_personal_family_relationships")  # 家庭信息
+    check_in = models.ManyToManyField(CheckIn, null=True, blank=True, related_name="personal_check_in",
+                                      db_table="hr_manage_information_personal_check_in_relationships")  # 考勤信息
     create_datetime = models.DateTimeField(auto_now_add=True)  # 创建日期
     update_datetime = models.DateTimeField(auto_now=True)  # 更新日期
     delete_flg = models.BooleanField(default=False)  # 删除标志位
