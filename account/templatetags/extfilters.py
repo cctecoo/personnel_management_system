@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from account.models import User
+
 __author__ = 'cc'
 from datetime import date, datetime
 
@@ -94,3 +96,19 @@ def get_dep_name_by_dep_id(dep_id):
     for department in departments:
         department_name = department_name+','+department.name
     return department_name[1:]
+
+
+@register.filter(name='sub_datetime')
+def sub_datetime(value, sub):
+    return value - sub
+
+
+@register.filter(name='get_name')
+def get_name(value):
+    user = User.objects.filter(personal_id=value).get()
+    return user.full_name
+
+@register.filter(name='get_group')
+def get_group(value):
+    user = User.objects.filter(personal_id=value).get()
+    return user.groups.get().name

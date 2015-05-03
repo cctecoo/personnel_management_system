@@ -20,7 +20,8 @@ urlpatterns = patterns('comprehensive.views',
 
     # 签到
     url(r'^check_in/(\d*)/$', 'check_in_personal_view'),  # 个人考勤view
-    # url(r'^check_in/list/$', 'check_in_list_view'),  # 统计考勤view
+    url(r'^check_in/(\d*)/list/$', 'check_in_personal_list_view'),  # 个人考勤list view
+    url(r'^check_in/all/list/$', 'check_in_all_list_view'),  # 所有人考勤记录view
     url(r'^check_in/action/$', 'check_in_action'),  # 签到action
 
     )

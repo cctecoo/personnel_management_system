@@ -23,7 +23,7 @@ def index_view(request):
         exclude(delete_flg=True).order_by("-create_datetime")
 
     # 非系统管理员 只能查看自己所属部门的公告
-    if not request.user.is_superuser:
+    if not request.user.is_superuser and request.user.personal.department is not None:
         str_department_id = str(request.user.personal.department.id)
         plus_department_id = str_department_id + ','
         queryset = queryset.filter(

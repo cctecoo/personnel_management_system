@@ -4,7 +4,7 @@
 {% block title %} - 查看考勤{% endblock %}
 {% block content %}
     <input type="hidden" id="total_count" value="{{ total_count }}"/>
-    <input type="hidden" id="amd_module" value="{% static "js/views/check_in.js" %}"/>
+    <input type="hidden" id="amd_module" value="{% static "js/views/check_in_all.js" %}"/>
     <input type="hidden" name="user_id" id="user_id" value="{{ user.id }}"/>
 {% for key,value in query_params.items %}
     <input type="hidden" id="qs_{{ key }}" value="{{ value }}"/>
@@ -13,9 +13,14 @@
         <div class="page_header">
             <ul class="bc">
                 <li><a href="/">主页</a> <span class="divider">/</span></li>
-                <li><a href="/comprehensive/check_in/all/list/">考勤一览</a> <span class="divider">/</span></li>
-                <li class="active">{{ user.full_name }}</li>
+                <li class="active">考勤一览</li>
             </ul>
+            <form class="form-search search_box">
+                <div class="input-append">
+                    <input type="text" class="span2 search-query" id="queryKey" value="{{ query_params.query }}">
+                    <button type="button" class="btn default_button" id="btnSearch">搜索</button>
+                </div>
+            </form>
         </div>
 
         <div id="CheckInList">
@@ -23,22 +28,10 @@
             <div class="row">
                 <div class="span12 alert alert-block">
                     <h4>注意!</h4>
-                    您还没有考勤记录，请先签到。
-                </div>
-
-                <div class="span1">
-                    <input type="hidden" name="personal_id" id="personal_id" value="{{ user.personal.id }}"/>
-                    <button class="btn btn-success" data-url="/comprehensive/check_in/action/" type="button">签到</button>
+                    还没有考勤记录，请先签到。
                 </div>
             </div>
         {% else %}
-            <div class="row">
-                <div class="span1">
-                    <input type="hidden" name="personal_id" id="personal_id" value="{{ user.personal.id }}"/>
-                    <button class="btn btn-success" data-url="/comprehensive/check_in/action/" type="button">签到</button>
-                </div>
-            </div>
-
             <div class="row">
                 <div class="span12" style="text-align: right;padding-top: 20px;">
                     <span class="label">共{{ total_count }}条记录</span>
@@ -51,16 +44,18 @@
                             <thead>
                                 <tr>
                                     <th>姓名</th>
-                                    <th>日期</th>
+                                    <th>身份</th>
+                                    <th><a href="#" class="data_column" sort_key="da">日期</a></th>
                                     <th>首次</th>
                                     <th>末次</th>
                                     <th>时长</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for item in check_in %}
+                                {% for item in check_in%}
                                     <tr>
-                                        <td class="cell_center">{{ user.full_name }}</td>
+                                        <td class="cell_center">{{ item.personal_id|get_name }}</td>
+                                        <td class="cell_center">{{ item.personal_id|get_group }}</td>
                                         <td class="cell_center">{{ item.date|format_date }}</td>
                                         <td class="cell_center">{{ item.create_datetime|format_datetime }}</td>
                                         <td class="cell_center">{{ item.update_datetime|format_datetime }}</td>

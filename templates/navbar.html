@@ -23,6 +23,20 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li active-by-url="\/comprehensive\/department\/set\/"><a href="/comprehensive/department/set/">部门管理</a></li>
+                        {% if user|in_group:"经理,人事" %}
+                            <li active-by-url="\/comprehensive\/check_in\/"><a href="/comprehensive/check_in/{{ user.id }}/">考勤管理</a></li>
+                        {% elif user.is_superuser %}
+                            <li active-by-url="\/comprehensive\/check_in\/"><a href="/comprehensive/check_in/all/list">考勤管理</a></li>
+                        {% endif %}
+                            {#                        staff 个人签到信息#}
+                    </ul>
+                </li>
+            {% else %}
+                <li class="dropdown" id="menuComprehensive" active-by-url="\/comprehensive\/">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#menuComprehensive">
+                        综合管理
+                    </a>
+                    <ul class="dropdown-menu">
                         <li active-by-url="\/comprehensive\/check_in\/"><a href="/comprehensive/check_in/{{ user.id }}/">考勤管理</a></li>
 {#                        staff 个人签到信息#}
                     </ul>
