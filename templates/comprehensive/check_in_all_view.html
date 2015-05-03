@@ -55,7 +55,6 @@
                                 {% for item in check_in%}
                                     <tr>
                                         <td class="cell_center">{{ item.personal_id|get_name }}</td>
-{#                                        <td class="cell_center">{{ item.personal.id }}</td>#}
                                         <td class="cell_center">{{ item.personal_id|get_group }}</td>
                                         <td class="cell_center">{{ item.date|format_date }}</td>
                                         <td class="cell_center">{{ item.create_datetime|format_datetime }}</td>
