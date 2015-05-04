@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import datetime
+import re
 
 from django.db import models
 from django.forms import ModelForm, Form, DateField, CharField
@@ -42,6 +43,15 @@ class NoticeForm(ModelForm):
                 msg = u"结束日期不能小于等于开始日期"
                 self._errors["end_date"] = self.error_class([msg])
                 del cleaned_data["end_date"]
+
+        # 通知内容不能为空
+        if 'content' in cleaned_data:
+            content = cleaned_data['content']
+            match = re.search(r'\S', content)
+            if not match:
+                msg = u"通知内容不能为空"
+                self._errors["content"] = self.error_class([msg])
+                del cleaned_data["content"]
 
         return cleaned_data
 

@@ -82,13 +82,12 @@
                         <textarea rows="8" class="highlight" id="addContent" name="content">
                             {{ form.content.value|default_if_none:"" }}
                         </textarea>
-{#                        {% if form.content.errors %}#}
-{#                            {% with form.content.errors|first as error %}#}
-{#                                <br/>#}
-{#                                <span class="error_message">{{ error }}</span>#}
-{#                            {% endwith %}#}
-{#                        {% endif %}#}
-
+                        {% if form.content.errors %}
+                            {% with form.content.errors|first as error %}
+                                <br/>
+                                <span class="error_message">{{ error }}</span>
+                            {% endwith %}
+                        {% endif %}
                     </div>
                 </div>
                 <div class="control-group">

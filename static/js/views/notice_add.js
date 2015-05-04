@@ -34,10 +34,10 @@ define([
         },
 
         save:function() {
-            // 前端check不通过直接return
-            if (!this.validate()) {
-                return;
-            }
+            //// 前端check不通过直接return
+            //if (!this.validate()) {
+            //    return;
+            //}
 
             //防止两重提交
             if (this.in_syncing) {
@@ -48,17 +48,17 @@ define([
             $('#frmAddNotice').submit();
         },
 
-        // 前端check检查
-        validate:function(){
-            //待完善
-            var content = $("textarea#addContent").val();
-            if (content == ''){
-                alert("通知内容不能为空");
-                return false;
-            }
-
-            return true;
-        },
+        //// 前端check检查
+        //validate:function(){
+        //    //待完善
+        //    var content = $("textarea#addContent").val();
+        //    if (content == ''){
+        //        alert("通知内容不能为空");
+        //        return false;
+        //    }
+        //
+        //    return true;
+        //},
 
         // 返回公告一览
         return_to_prev_page:function() {
