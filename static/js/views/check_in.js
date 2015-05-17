@@ -35,7 +35,7 @@ define([
         initialize:function () {
             // 签到按钮提示信息
             $('.btn-success').popover({
-                placement: "top",
+                placement: "right",
                 trigger: "hover",
                 title: "提示",
                 delay: {show:1000, hide:100},
@@ -81,7 +81,7 @@ define([
                                     $('.tip').tooltip();
 
                                     $('.btn-success').popover({
-                                    placement: "top",
+                                    placement: "right",
                                     trigger: "hover",
                                     title: "提示",
                                     delay: {show:1000, hide:100},
