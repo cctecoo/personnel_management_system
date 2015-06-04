@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import datetime
+import re
 
 from django.contrib.admindocs.utils import ROLES
 from django.contrib.auth import authenticate
@@ -131,6 +132,14 @@ class UserForm(ModelForm):
                 self._errors["username"] = self.error_class([msg])
 
                 del cleaned_data["username"]
+
+        if 'username' in cleaned_data:
+            username = cleaned_data['username']
+            if not re.search(u'^[_a-zA-Z0-9\u4e00-\u9fa5]+$', username):
+                msg = u"用户名包含了非法字符"
+                self._errors['username'] = self.error_class([msg])
+
+                del cleaned_data['username']
 
         return cleaned_data
 
