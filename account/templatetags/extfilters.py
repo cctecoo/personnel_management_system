@@ -90,7 +90,8 @@ def get_dep_name_by_dep_id(dep_id):
     根据部门id获取部门名。
     """
     department_name = ""
-    departments_id = [int(i) for i in dep_id.split(',')]
+    dep_id_fix = dep_id[0:-1]
+    departments_id = [int(i) for i in dep_id_fix.split(',')]
 
     departments = Department.objects.filter(id__in=departments_id)
     for department in departments:
