@@ -92,7 +92,7 @@ def notice_add_action(request):
         form.instance.start_date = request.POST['start_date']
         form.instance.end_date = request.POST['end_date']
         form.instance.content = request.POST['content']
-        form.instance.dep_id = dep_id
+        form.instance.dep_id = str(dep_id) + ','
 
         form.save()
         return back_to_original_page(request, "/notice/list/")
@@ -144,7 +144,7 @@ def notice_edit_action(request):
         form.instance.start_date = request.POST['start_date']
         form.instance.end_date = request.POST['end_date']
         form.instance.content = request.POST['content']
-        form.instance.dep_id = dep_id
+        form.instance.dep_id = str(dep_id) + ','
 
         form.save()
 
